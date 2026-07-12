@@ -1,0 +1,33 @@
+# Dependencies (ভারী লাইব্রেরি যা ডাউনলোড করা যায়)
+node_modules/
+jspm_packages/
+
+# Production build (বিল্ড করার পর তৈরি হওয়া ফাইল)
+dist/
+build/
+
+# Environment variables (গোপন এপিআই কি এবং ক্রেডেনশিয়াল)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs (ডিবাগিং এবং ত্রুটির রেকর্ড)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files (অপারেটিং সিস্টেমের নিজস্ব ফাইল)
+.DS_Store
+Thumbs.db
+
+# Editor configurations (কোড এডিটর বা IDE এর সেটিংস)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

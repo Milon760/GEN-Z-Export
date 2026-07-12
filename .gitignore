@@ -1,0 +1,35 @@
+# ----------------------------------------------------
+# 1. Backend Dependencies & Secrets
+# ----------------------------------------------------
+backend/node_modules/
+backend/.env
+backend/.env.local
+backend/*.log
+backend/npm-debug.log*
+backend/yarn-debug.log*
+
+# Backend file uploads or temporary caches (যদি থাকে)
+backend/uploads/
+backend/.cache/
+
+# ----------------------------------------------------
+# 2. Frontend Dependencies & Build Outputs
+# ----------------------------------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.production.local
+frontend/*.log
+
+# ----------------------------------------------------
+# 3. System & Editor files (Global across project)
+# ----------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.sw?
