@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     const registerUser = async (registrationData) => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/auth/register', {
+            const response = await fetch('https://gen-z-export-backend.onrender.com/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(registrationData),
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     const loginUser = async (loginData) => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/auth/login', {
+            const response = await fetch('https://gen-z-export-backend.onrender.com/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

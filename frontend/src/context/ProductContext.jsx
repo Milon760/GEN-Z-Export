@@ -10,7 +10,7 @@ const ProductProvider = ({ children }) => {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/products');
+            const res = await fetch('https://gen-z-export-backend.onrender.com/api/products');
             const allProduct = await res.json();
 
             if (allProduct.success) {
