@@ -11,6 +11,8 @@ const emailWithNodeMailer = require('../helper/email');
 const { emailTemplate } = require('../helper/emailTemplate');
 
 
+
+// get all user
 const getUsers = async (req, res, next) => {
   try {
     const search = req.query.search || '';
@@ -64,8 +66,7 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-
-
+// get user by id
 const userFindWithId = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -82,9 +83,6 @@ const userFindWithId = async (req, res, next) => {
     next(error);
   }
 };
-
-
-
 
 
 // register handle
@@ -112,12 +110,12 @@ const registerHandle = async (req, res, next) => {
 
 
   // send email with nodemailer
-  try {
-    await emailWithNodeMailer(emailData);
-  } catch (emailError) {
-    next(createError(500, 'Failed to send varification email.'))
-    return;
-  };
+  // try {
+  //   await emailWithNodeMailer(emailData);
+  // } catch (emailError) {
+  //   next(createError(500, 'Failed to send varification email.'))
+  //   return;
+  // };
 
   successResponse(res, {
     status: 200,
@@ -160,10 +158,12 @@ const loginHandle = async (req, res) => {
       return res.status(400).json({ message: "email or password Requierd!" });
     }
 
+
     // ১. ইউজার ডাটাবেজে আছে কিনা চেক করা
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ success: false, message: "ভুল ইমেইল অথবা পাসওয়ার্ড!" });
+      return res.status(400).json({ success: false, message: "This Email not Register. please Register!" });
     }
 
     // ২. ইউজার ইমেইল ভেরিফাই করেছে কিনা চেক করা (খুবই গুরুত্বপূর্ণ!)
@@ -187,16 +187,53 @@ const loginHandle = async (req, res) => {
       { expiresIn: '1d' } // ১ দিনের মেয়াদ
     );
 
+    res.cookie('token', token, {
+      httpOnty: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+
     // ৫. রেসপন্স পাঠানো
     res.status(200).json({
       success: true,
       message: "লগইন সফল হয়েছে",
-      token,
-      user: { id: user._id, name: user.name, email: user.email }
+      user: user,
     });
 
   } catch (error) {
     res.status(500).json({ success: false, message: "সার্ভারে কোনো সমস্যা হয়েছে!" });
+  }
+};
+
+// get user profile handler
+const getUserProfile = async (req, res) => {
+  try {
+    console.log('iddddd', req.user.userId);
+    
+    const userId = req.user.userId;
+
+    if (!userId) {
+      return res.status(401).json({ message: "user id is Requierd!" });
+    }
+
+
+    // ১. ইউজার ডাটাবেজে আছে কিনা চেক করা
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: "user not found" });
+    }
+
+    // ৫. রেসপন্স পাঠানো
+    res.status(200).json({
+      success: true,
+      message: "Profile returned successfully",
+      user: user,
+    });
+
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -319,6 +356,24 @@ const PasswordReset = async (req, res, next) => {
 };
 
 
+// user logout 
+const userLogout = (req, res) => {
+  try {
+    const cookieClear = res.clearCookie('token');
+
+    if (!cookieClear) throw new Error("cooke clear failed");
+
+    successResponse(res, {
+      status: 200,
+      message: "Logout sucessfull",
+    });
+  } catch (error) {
+    next(error)
+  }
+};
+
+
+
 
 module.exports = {
   getUsers,
@@ -329,4 +384,6 @@ module.exports = {
   userUpdateWithId,
   userDeleteWithId,
   PasswordReset,
+  getUserProfile,
+  userLogout,
 }

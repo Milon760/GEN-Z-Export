@@ -9,7 +9,10 @@ const {
     userDeleteWithId,
     userUpdateWithId,
     PasswordReset,
-} = require('../controllers/userControllers')
+    getUserProfile,
+    userLogout,
+} = require('../controllers/userControllers');
+const protect = require('../middlewares/authMiddleware');
 
 
 const route = express.Router();
@@ -23,6 +26,12 @@ route.post('/verify', UserVerification);
 
 // login router
 route.post('/login', loginHandle);
+
+// user profine access 
+route.get('/profile', protect, getUserProfile);
+
+// user logout handler
+route.post('/logout', userLogout);
 
 // Reset password
 route.post('forgot-password', PasswordReset);

@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const createError = require('http-errors');
@@ -13,7 +14,13 @@ const app = express();
 
 // use Middleware
 app.use(morgan("dev"));
-app.use(cors());
+
+app.use(cookieParser());
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

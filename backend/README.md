@@ -6,21 +6,23 @@
 
 ##  Products Routers  ##
 
-# GET: http://localhost:5000/api/products   → All Product Retruned
+# GET: http://localhost:5000/api/products   → All Product Retruned  ** admin and user
 
-# GET: http://localhost:5000/api/products/:id   → Product find with ID
+# GET: http://localhost:5000/api/products/:id   → Product find with ID  ** admin and user
 
-# GET: http://localhost:5000/api/products/order   → Order History
+# GET: http://localhost:5000/api/products/order   → All Order History  ** admin
 
-# POST: http://localhost:5000/api/products   → Create a 
+# GET: http://localhost:5000/api/products/my-order   → User Order History  ** admin and  user
 
-# POST: http://localhost:5000/api/products/cart/add   → Add a Product to Cart
+# POST: http://localhost:5000/api/products   → Create Product ** admin
 
-# POST: http://localhost:5000/api/products/order/place   → Order Product
+# POST: http://localhost:5000/api/products/cart/add   → Add Product to Cat ** user
 
-# PUT: http://localhost:5000/api/products/:id   → Product Update
+# POST: http://localhost:5000/api/products/order/place   → Product Prtoducts ** user
 
-# DELETE: http://localhost:5000/api/products/:id   → Product Detele
+# PUT: http://localhost:5000/api/products/:id   → Product Update  ** admin
+
+# DELETE: http://localhost:5000/api/products/:id   → Product Detele   ** admin
 
 
 
@@ -30,11 +32,15 @@
 
 # GET: http://localhost:5000/auth/users/:id   → User find with ID
 
+# GET: http://localhost:5000/auth/users/:id   → User profile find
+
 # POST: http://localhost:5000/auth/register   → User Register
 
 # POST: http://localhost:5000/auth/verify   → User Verification JWT Token
 
 # POST: http://localhost:5000/auth/login   → User Login
+
+# POST: http://localhost:5000/auth/logout   → User Logout
 
 # POST: http://localhost:5000/auth/forgor-password   → User Password Reset
 

@@ -95,7 +95,7 @@ const getProductById = async (req, res, next) => {
 // Create a Product
 const createProducts = async (req, res, next) => {
   try {
-    const { id, name, category, price, original_price, size, colors, stock, rating, description } = req.body || {};
+    const { id, name, category, price, original_price, size, colors, stock, rating, description, image } = req.body || {};
 
     // ১. সব ডাটা ঠিকঠাক আছে কিনা যাচাই (৪০০ ব্যাড রিকোয়েস্ট)
     if (!id || !name || !category || !price || !original_price || !size || !colors || !stock || !rating || !description) {
@@ -116,8 +116,8 @@ const createProducts = async (req, res, next) => {
     const image_url = uploadResponse.secure_url;
 
     // ৪. নতুন প্রোডাক্ট তৈরি ও সেভ করা
-    const newProduct = new Products({ 
-      id, name, category, price, original_price, size, colors, stock, rating, description, image: image_url 
+    const newProduct = new Products({
+      id, name, category, price, original_price, size, colors, stock, rating, description, image,
     });
     const product = await newProduct.save();
 
@@ -127,20 +127,20 @@ const createProducts = async (req, res, next) => {
     }
 
     // ৬. সফল রেসপন্স
-    return successResponse(res, { 
-      status: 201, 
-      message: "Product created successfully", 
-      payload: { product } 
+    return successResponse(res, {
+      status: 201,
+      message: "Product created successfully",
+      payload: { product }
     });
 
   } catch (error) {
     // যেকোনো আনএক্সপেক্টেড এরর কনসোলে দেখার জন্য
-    console.error("Error in createProducts:", error); 
-    
+    console.error("Error in createProducts:", error);
+
     // আসল এরর মেসেজটি ক্লায়েন্টকে পাঠানো হচ্ছে
-    return res.status(error.status || 500).json({ 
-      success: false, 
-      message: error.message || 'failed to create products' 
+    return res.status(error.status || 500).json({
+      success: false,
+      message: error.message || 'failed to create products'
     });
   }
 };
@@ -255,6 +255,7 @@ const addProductToCart = async (req, res, next) => {
 // order confrim
 const orderProducts = async (req, res, next) => {
   try {
+    
     const { userId, paymentMethod, shippingAddress } = req.body || {};
     if (!userId || !paymentMethod || !shippingAddress) {
       throw createError(400, 'not empty value accepted')
@@ -306,9 +307,36 @@ const getOrderHistory = async (req, res, next) => {
     }
 
     successResponse(res, {
-      status: 201,
+      status: 200,
       message: "Order History reatruned sucessfully",
       payload: { orderHistory }
+    });
+
+  } catch (error) {
+    next(error)
+  }
+};
+
+// get my orders
+const getMyOrders = async (req, res, next) => {
+  try {
+    const userId = req.body;
+    const id = req.user.userId;
+
+    console.log('use', id);
+    
+
+    const userOrders = await Order.find({userId: id}).sort({ createAt: -1 });
+
+
+    if (!userOrders || userOrders.length === 0) {
+      throw createError(400, 'Order not found ')
+    }
+
+    successResponse(res, {
+      status: 200,
+      message: "Order reatruned sucessfully",
+      payload: { userOrders }
     });
 
   } catch (error) {
@@ -327,5 +355,6 @@ module.exports = {
   addProductToCart,
   orderProducts,
   getOrderHistory,
+  getMyOrders,
 
 }

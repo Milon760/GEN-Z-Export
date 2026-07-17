@@ -37,7 +37,7 @@ const data = {
             "colors": ["White", "Sky Blue", "Navy Blue"],
             "stock": 45,
             "rating": 4.7,
-            "image_url": "https://example.com",
+            "image": " https://res.cloudinary.com/da65g97jk/image/upload/v1784193032/1783662321748_hzlxxs.jpg",
             "description": "100% premium cotton slim fit formal shirt for everyday office wear."
         },
         {
@@ -51,7 +51,7 @@ const data = {
             "colors": ["Maroon", "Black", "White"],
             "stock": 20,
             "rating": 4.5,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257359/1784256550184_w4uojw.jpg",
             "description": "Comfortable cotton semi-long panjabi with elegant embroidery work on the collar."
         },
         {
@@ -65,7 +65,7 @@ const data = {
             "colors": ["Deep Blue", "Light Wash"],
             "stock": 60,
             "rating": 4.8,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784192943/1783662399418_pm1u3o.jpg",
             "description": "Durable and stretchable denim pant for ultimate daily comfort."
         },
         {
@@ -79,7 +79,7 @@ const data = {
             "colors": ["Black", "Beige", "Olive Green"],
             "stock": 110,
             "rating": 4.6,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784192896/1783662347809_yk8niz.jpg",
             "description": "260 GSM drop-shoulder oversized t-shirt made with breathable cotton fabric."
         },
         {
@@ -93,7 +93,7 @@ const data = {
             "colors": ["Olive", "Khaki", "White"],
             "stock": 35,
             "rating": 4.4,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784192767/1783662425304_gfnezh.jpg",
             "description": "Lightweight linen blend shirt perfect for summer and casual outings."
         },
         {
@@ -107,7 +107,7 @@ const data = {
             "colors": ["Jet Black", "Navy Blue"],
             "stock": 15,
             "rating": 4.9,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257457/1784256758440_jejxih.jpg",
             "description": "Premium Kabli set with matching pajama, designed for festivals and wedding events."
         },
         {
@@ -121,7 +121,7 @@ const data = {
             "colors": ["Beige", "Black", "Grey"],
             "stock": 50,
             "rating": 4.3,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784192860/1783662402927_dmwett.jpg",
             "description": "Versatile smart-casual chinos that pair perfectly with shirts or t-shirts."
         },
         {
@@ -135,7 +135,7 @@ const data = {
             "colors": ["Red", "Royal Blue", "Charcoal"],
             "stock": 85,
             "rating": 4.5,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257163/1784256292849_nblbcw.jpg",
             "description": "Classic pique cotton polo shirt with a clean minimalist design."
         },
         {
@@ -149,7 +149,7 @@ const data = {
             "colors": ["Floral Print", "Abstract Black"],
             "stock": 25,
             "rating": 4.2,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784192829/1783662419573_wpzpap.jpg",
             "description": "Trendy relaxed-fit printed resort shirt made of soft rayon fabric."
         },
         {
@@ -163,7 +163,7 @@ const data = {
             "colors": ["Multicolor Blue", "Multicolor Maroon"],
             "stock": 40,
             "rating": 4.6,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257529/1784256489167_ds484s.jpg",
             "description": "Modern vibrant digital prints on premium soft viscose fabric for a stylish look."
         },
         {
@@ -177,7 +177,7 @@ const data = {
             "colors": ["Army Green", "Black"],
             "stock": 30,
             "rating": 4.7,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257568/1784256401155_jwvlg2.jpg",
             "description": "Multi-pocket durable cotton cargo pants for a rugged streetwear style."
         },
         {
@@ -191,121 +191,121 @@ const data = {
             "colors": ["White", "Yellow"],
             "stock": 150,
             "rating": 4.4,
-            "image_url": "https://example.com",
+            "image": "https://res.cloudinary.com/da65g97jk/image/upload/v1784257637/1784256347956_x3xned.jpg",
             "description": "100% combed cotton t-shirt featuring high-quality durable screen print."
         },
-        {
-            "id": 13,
-            "name": "Oxford Cotton Button-Down Shirt",
-            "category": "shirt",
-            "price": 1350,
-            "original_price": 1700,
-            "currency": "BDT",
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["Light Pink", "Grey", "White"],
-            "stock": 55,
-            "rating": 4.5,
-            "image_url": "https://example.com",
-            "description": "Classic timeless Oxford weave shirt suitable for both office and casual wear."
-        },
-        {
-            "id": 14,
-            "name": "Pure Silk Luxury Panjabi",
-            "category": "panjabi",
-            "price": 5500,
-            "original_price": 6500,
-            "currency": "BDT",
-            "sizes": ["40", "42", "44", "46"],
-            "colors": ["Golden", "Off-White"],
-            "stock": 10,
-            "rating": 5.0,
-            "image_url": "https://example.com",
-            "description": "Exclusive pure silk panjabi with intricate hand embroidery for premium occasions."
-        },
-        {
-            "id": 15,
-            "name": "Formal Executive Trousers",
-            "category": "pant",
-            "price": 1650,
-            "original_price": 2100,
-            "currency": "BDT",
-            "sizes": ["30", "32", "34", "36", "38"],
-            "colors": ["Dark Grey", "Black", "Navy"],
-            "stock": 40,
-            "rating": 4.6,
-            "image_url": "https://example.com",
-            "description": "Premium wrinkle-free formal pants tailored for a sharp look."
-        },
-        {
-            "id": 16,
-            "name": "V-Neck Slim Fit T-Shirt",
-            "category": "t-shirt",
-            "price": 450,
-            "original_price": 600,
-            "currency": "BDT",
-            "sizes": ["M", "L", "XL"],
-            "colors": ["Charcoal", "Navy"],
-            "stock": 90,
-            "rating": 4.1,
-            "image_url": "https://example.com",
-            "description": "Lightweight stretchable cotton V-neck tee ideal for layering."
-        },
-        {
-            "id": 17,
-            "name": "Denim Casual Full Sleeve Shirt",
-            "category": "shirt",
-            "price": 1750,
-            "original_price": 2200,
-            "currency": "BDT",
-            "sizes": ["M", "L", "XL"],
-            "colors": ["Indigo", "Light Blue"],
-            "stock": 28,
-            "rating": 4.7,
-            "image_url": "https://example.com",
-            "description": "Rugged yet soft washed denim shirt with double front pockets."
-        },
-        {
-            "id": 18,
-            "name": "Slim Fit Athleisure Joggers",
-            "category": "pant",
-            "price": 990,
-            "original_price": 1400,
-            "currency": "BDT",
-            "sizes": ["M", "L", "XL"],
-            "colors": ["Black", "Melange Grey"],
-            "stock": 75,
-            "rating": 4.5,
-            "image_url": "https://example.com",
-            "description": "Comfortable Terry cotton track pants for gym, sports, or lounging."
-        },
-        {
-            "id": 19,
-            "name": "Striped Summer Polo Shirt",
-            "category": "t-shirt",
-            "price": 890,
-            "original_price": 1200,
-            "currency": "BDT",
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["White-Blue Stripes", "Red-Black Stripes"],
-            "stock": 65,
-            "rating": 4.4,
-            "image_url": "https://example.com",
-            "description": "Yarn-dyed cotton striped polo shirt offering a sporty casual look."
-        },
-        {
-            "id": 20,
-            "name": "Casual Cotton Short Panjabi",
-            "category": "panjabi",
-            "price": 1500,
-            "original_price": 1800,
-            "currency": "BDT",
-            "sizes": ["38", "40", "42"],
-            "colors": ["Teal", "Mustard"],
-            "stock": 33,
-            "rating": 4.3,
-            "image_url": "https://example.com",
-            "description": "Trendy short-length panjabi crafted from breathable cotton for youth."
-        }
+        // {
+        //     "id": 13,
+        //     "name": "Oxford Cotton Button-Down Shirt",
+        //     "category": "shirt",
+        //     "price": 1350,
+        //     "original_price": 1700,
+        //     "currency": "BDT",
+        //     "sizes": ["S", "M", "L", "XL"],
+        //     "colors": ["Light Pink", "Grey", "White"],
+        //     "stock": 55,
+        //     "rating": 4.5,
+        //     "image_url": "https://example.com",
+        //     "description": "Classic timeless Oxford weave shirt suitable for both office and casual wear."
+        // },
+        // {
+        //     "id": 14,
+        //     "name": "Pure Silk Luxury Panjabi",
+        //     "category": "panjabi",
+        //     "price": 5500,
+        //     "original_price": 6500,
+        //     "currency": "BDT",
+        //     "sizes": ["40", "42", "44", "46"],
+        //     "colors": ["Golden", "Off-White"],
+        //     "stock": 10,
+        //     "rating": 5.0,
+        //     "image_url": "https://example.com",
+        //     "description": "Exclusive pure silk panjabi with intricate hand embroidery for premium occasions."
+        // },
+        // {
+        //     "id": 15,
+        //     "name": "Formal Executive Trousers",
+        //     "category": "pant",
+        //     "price": 1650,
+        //     "original_price": 2100,
+        //     "currency": "BDT",
+        //     "sizes": ["30", "32", "34", "36", "38"],
+        //     "colors": ["Dark Grey", "Black", "Navy"],
+        //     "stock": 40,
+        //     "rating": 4.6,
+        //     "image_url": "https://example.com",
+        //     "description": "Premium wrinkle-free formal pants tailored for a sharp look."
+        // },
+        // {
+        //     "id": 16,
+        //     "name": "V-Neck Slim Fit T-Shirt",
+        //     "category": "t-shirt",
+        //     "price": 450,
+        //     "original_price": 600,
+        //     "currency": "BDT",
+        //     "sizes": ["M", "L", "XL"],
+        //     "colors": ["Charcoal", "Navy"],
+        //     "stock": 90,
+        //     "rating": 4.1,
+        //     "image_url": "https://example.com",
+        //     "description": "Lightweight stretchable cotton V-neck tee ideal for layering."
+        // },
+        // {
+        //     "id": 17,
+        //     "name": "Denim Casual Full Sleeve Shirt",
+        //     "category": "shirt",
+        //     "price": 1750,
+        //     "original_price": 2200,
+        //     "currency": "BDT",
+        //     "sizes": ["M", "L", "XL"],
+        //     "colors": ["Indigo", "Light Blue"],
+        //     "stock": 28,
+        //     "rating": 4.7,
+        //     "image_url": "https://example.com",
+        //     "description": "Rugged yet soft washed denim shirt with double front pockets."
+        // },
+        // {
+        //     "id": 18,
+        //     "name": "Slim Fit Athleisure Joggers",
+        //     "category": "pant",
+        //     "price": 990,
+        //     "original_price": 1400,
+        //     "currency": "BDT",
+        //     "sizes": ["M", "L", "XL"],
+        //     "colors": ["Black", "Melange Grey"],
+        //     "stock": 75,
+        //     "rating": 4.5,
+        //     "image_url": "https://example.com",
+        //     "description": "Comfortable Terry cotton track pants for gym, sports, or lounging."
+        // },
+        // {
+        //     "id": 19,
+        //     "name": "Striped Summer Polo Shirt",
+        //     "category": "t-shirt",
+        //     "price": 890,
+        //     "original_price": 1200,
+        //     "currency": "BDT",
+        //     "sizes": ["S", "M", "L", "XL"],
+        //     "colors": ["White-Blue Stripes", "Red-Black Stripes"],
+        //     "stock": 65,
+        //     "rating": 4.4,
+        //     "image_url": "https://example.com",
+        //     "description": "Yarn-dyed cotton striped polo shirt offering a sporty casual look."
+        // },
+        // {
+        //     "id": 20,
+        //     "name": "Casual Cotton Short Panjabi",
+        //     "category": "panjabi",
+        //     "price": 1500,
+        //     "original_price": 1800,
+        //     "currency": "BDT",
+        //     "sizes": ["38", "40", "42"],
+        //     "colors": ["Teal", "Mustard"],
+        //     "stock": 33,
+        //     "rating": 4.3,
+        //     "image_url": "https://example.com",
+        //     "description": "Trendy short-length panjabi crafted from breathable cotton for youth."
+        // }
     ]
 
 };
