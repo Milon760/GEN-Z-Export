@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowRight, FiTruck, FiShield, FiRotateCcw, FiDollarSign } from 'react-icons/fi';
 import { ProductContext } from '../context/ProductContext';
+import HomeBanner from '../components/HomeBanner';
 
 
 const Home = () => {
-  const { products } = useContext(ProductContext);
+  const { allProduct } = useContext(ProductContext);
 
   // প্রথম ৪টি প্রোডাক্টকে ফিচারড হিসেবে দেখানোর জন্য
-  const featuredProducts = products ? products.slice(0, 4) : [];
+  const featuredProducts = allProduct ? allProduct.slice(0, 4) : [];
 
   const categories = [
     { name: 'Elite Panjabi', path: '/shop/panjabi', image: 'https://images.unsplash.com/photo-1608748010899-18f300247112?q=80&w=600&auto=format&fit=crop', tag: 'EID DROP' },
@@ -20,33 +21,8 @@ const Home = () => {
   return (
     <div className="w-full bg-white dark:bg-zinc-950 text-neutral-900 dark:text-neutral-100 min-h-screen pt-24 font-sans selection:bg-[#C5A059] selection:text-black">
 
-      {/* ১. আল্ট্রা-প্রিমিয়াম হিরো সেকশন (Hero Section) */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-4">
-        <div className="relative rounded-[32px] overflow-hidden bg-zinc-900 text-white min-h-[60vh] sm:min-h-[70vh] flex items-center shadow-2xl">
-          {/* ব্যাকগ্রাউন্ড ওভারলে ইমেজ/ডিজাইন */}
-          <div className="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=1600&auto=format&fit=crop')` }}></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
+      <HomeBanner />
 
-          {/* হিরো কন্টেন্ট */}
-          <div className="relative z-10 max-w-2xl pl-6 sm:pl-12 md:pl-20 py-12 flex flex-col items-start text-left">
-            <span className="bg-cyan-600 dark:bg-[#C5A059] text-white dark:text-black font-black text-[10px] tracking-widest uppercase px-3 py-1 rounded-full mb-4 animate-pulse">
-              CYBERPUNK DROP 2026
-            </span>
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none mb-6">
-              FUTURE OF <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500 dark:from-[#C5A059] dark:to-amber-200">
-                STREETWEAR
-              </span>
-            </h1>
-            <p className="text-gray-300 text-sm sm:text-base font-medium max-w-md mb-8 leading-relaxed">
-              Elevate your daily fit with our high-grade premium materials. Designed for the next generation.
-            </p>
-            <Link to="/shop" className="group flex items-center gap-3 bg-white text-zinc-950 dark:bg-[#C5A059] dark:text-zinc-950 font-black text-xs sm:text-sm tracking-widest uppercase px-6 py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-cyan-500 hover:text-white dark:hover:bg-white dark:hover:text-black">
-              Explore Drops <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ২. ট্রাস্ট ফ্যাক্টর / ফিচারস বার */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -117,7 +93,7 @@ const Home = () => {
             featuredProducts.map((product) => (
               <div key={product._id} className="group flex flex-col text-left">
                 <div className="relative aspect-[3/4] bg-neutral-100 dark:bg-zinc-900 rounded-2xl overflow-hidden mb-3">
-                  <img src={product.image || "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto=format&fit=crop"} alt={product.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={product.image} alt={product.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <button className="absolute bottom-3 left-3 right-3 bg-zinc-950 text-white text-xs font-bold py-2.5 rounded-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-cyan-600 dark:hover:bg-[#C5A059] dark:hover:text-black">
                     Quick Add +
                   </button>
@@ -139,25 +115,6 @@ const Home = () => {
           )}
         </div>
       </section>
-
-      {/* ৫. মিনিমাল প্রফেশনাল ফুটার (Premium Footer) */}
-      <footer className="mt-20 border-t border-neutral-200 dark:border-white/5 bg-neutral-50 dark:bg-zinc-950 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-          <div>
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <span className="font-black text-lg tracking-wider">GEN-Z</span>
-              <span className="text-[10px] font-bold text-cyan-600 dark:text-[#C5A059] tracking-wider">EXPORT</span>
-            </div>
-            <p className="text-xs text-neutral-500 mt-1">© 2026 GEN-Z Export. All rights reserved.</p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-6 text-xs font-bold text-neutral-500 dark:text-neutral-400">
-            <Link to="/shop" className="hover:text-neutral-900 dark:hover:text-white">Shop</Link>
-            <Link to="/" className="hover:text-neutral-900 dark:hover:text-white">Privacy Policy</Link>
-            <Link to="/" className="hover:text-neutral-900 dark:hover:text-white">Terms of Cargo</Link>
-            <Link to="/" className="hover:text-neutral-900 dark:hover:text-white">Contact Node</Link>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );

@@ -2,23 +2,31 @@ import { createBrowserRouter } from 'react-router-dom';
 import Root from '../components/Root';
 import NotFound from '../page/NotFound';
 import Home from '../page/Home';
-import Shop from '../page/Shop1';
-import Dashboard from '../page/admin/Dashboard';
+import Shop from '../page/Shop2';
+import AdminDashboard from '../page/admin/AdminDashboard';
 import AdminLayout from '../page/admin/AdminLayout';
 import Products from '../page/admin/Products';
 import Users from '../page/admin/Users';
 import Order from '../page/admin/Order';
 import Setting from '../page/admin/Setting';
-import Profile from '../page/admin/Profile';
 import Pant from '../page/Pant';
 import Panjabi from '../page/Panjabi';
 import Shirt from '../page/Shirt';
 import TShirt from '../page/TShirt';
 import ProductCreate from '../page/admin/ProductCreate1';
-import PrivateRoute from '../components/PrivateRoute';
+import UserPrivateRoute from '../components/UserPrivateRoute';
 import Register from '../page/Register';
 import Login from '../page/Login';
 import Verify from '../page/Verify';
+import AdminProfile from '../page/admin/AdminProfile';
+import RegisterSuccess from '../page/RegisterSuccess';
+import Dashboard from '../page/Dashboard';
+import SingleProduct from '../page/SingleProduct';
+import Wishlist from '../page/Wishlist';
+import Cart from '../page/Cart';
+import Checkout from '../page/Checkout';
+import AdminPrivateRoute from '../components/AdminPrivateRoute';
+import PublicRoute from '../components/PublickRoute';
 
 export const router = createBrowserRouter([
   {
@@ -50,62 +58,100 @@ export const router = createBrowserRouter([
         element: <Shop />
       },
       {
-        path: '/register',
-        element: <Register />
+        path: '/shop/:id',
+        element: <SingleProduct />
       },
       {
-        path: '/login',
-        element: <Login />
+        path: '/register-success',
+        element: <RegisterSuccess />
       },
       {
         path: '/auth/verification/:token',
         element: <Verify />
       },
       {
-        element: <PrivateRoute />,
+        path: '/wishlist',
+        element: <Wishlist />
+      },
+      {
+        element: <UserPrivateRoute />,
         children: [
           {
-            path: '/admin-dashboard',
-            element: <AdminLayout />, // এই লেআউটের ভেতরেই সব চাইল্ড পেজ লোড হবে
-            children: [
-              {
-                index: true,
-                element: <Dashboard />
-              },
-              {
-                path: 'users',
-                element: <Users />
-              },
-              {
-                path: 'products',
-                element: <Products />
-              },
-              {
-                path: 'product-create',
-                element: <ProductCreate />
-              },
-              {
-                path: 'orders',
-                element: <Order />
-              },
-              {
-                path: 'setting',
-                element: <Setting />
-              },
-              {
-                path: 'profile',
-                element: <Profile />
-              },
-            ]
+            path: '/cart',
+            element: <Cart />
           },
-
+          {
+            path: '/checkout',
+            element: <Checkout />
+          },
+          {
+            path: '/dashboard',
+            element: <Dashboard />
+          },
+        ]
+      },
+      {
+        element: <PublicRoute />,
+        children: [
+          {
+            path: 'register',
+            element: <Register />
+          },
+          {
+            path: 'login',
+            element: <Login />
+          }
+        ]
+      },
+    ]
+  },
+  {
+    element: <AdminPrivateRoute />,
+    children: [
+      {
+        path: '/admin-dashboard',
+        element: <AdminLayout />, // এই লেআউটের ভেতরেই সব চাইল্ড পেজ লোড হবে
+        children: [
+          {
+            index: true,
+            element: <AdminDashboard />
+          },
+          {
+            path: 'users',
+            element: <Users />
+          },
+          {
+            path: 'products',
+            element: <Products />
+          },
+          {
+            path: 'product-create',
+            element: <ProductCreate />
+          },
+          {
+            path: 'orders',
+            element: <Order />
+          },
+          {
+            path: 'setting',
+            element: <Setting />
+          },
+          {
+            path: 'profile',
+            element: <AdminProfile />
+          },
         ]
       },
 
-
-
     ]
   },
+
+
+
+
+
+
+
   {
     path: "*",
     element: <NotFound />

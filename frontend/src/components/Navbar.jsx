@@ -12,6 +12,8 @@ import {
 } from 'react-icons/fi';
 import { ThemeContext } from '../context/ThemeContext';
 import { FaMoon, FaSun } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { IoIosMoon, IoIosSunny } from 'react-icons/io';
 
 export default function Navbar1({
     cartCount = 0,
@@ -19,13 +21,13 @@ export default function Navbar1({
     onCartOpen = () => { }
 }) {
     const { theme, toggleTheme } = useContext(ThemeContext);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [scrolled, setScrolled] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // স্ক্রল ইফেক্ট মনিটর
     useEffect(() => {
@@ -54,14 +56,14 @@ export default function Navbar1({
         }
     };
 
+
     return (
         <header className="w-full fixed top-0 left-0 z-500 font-sans select-none antialiased">
             {/* মেইন নেভিগেশন বার */}
-            <nav className={`w-full transition-all duration-300 border-b border-gray-200/80 dark:border-neutral-200/30 ${
-                scrolled 
-                    ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl py-3 shadow-lg shadow-black/5 dark:shadow-white/5' 
-                    : 'bg-white dark:bg-neutral-950 py-5'
-            }`}>
+            <nav className={`w-full transition-all duration-300 border-b border-gray-200/80 dark:border-neutral-200/30 ${scrolled
+                ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl py-3 shadow-lg shadow-black/5 dark:shadow-white/5'
+                : 'bg-white dark:bg-neutral-950 py-5'
+                }`}>
                 <div className="max-w-7xl mx-auto px-4 py-2.5 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center gap-4">
 
@@ -82,17 +84,17 @@ export default function Navbar1({
                             </Link>
                         </div>
 
+
                         {/* ডেস্কটপ মেনু */}
                         <div className="hidden lg:flex items-center space-x-1">
                             {menuItems.map((item) => (
                                 <NavLink
                                     key={item.path}
                                     to={item.path}
-                                    className={({ isActive }) => `px-4 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 relative flex items-center gap-2 hover:scale-105 ${
-                                        isActive
-                                            ? 'bg-neutral-900 text-white dark:bg-[#C5A059] dark:text-neutral-950 shadow-sm'
-                                            : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900'
-                                    }`}
+                                    className={({ isActive }) => `px-4 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 relative flex items-center gap-2 hover:scale-105 ${isActive
+                                        ? 'bg-neutral-900 text-white dark:bg-[#C5A059] dark:text-neutral-950 shadow-sm'
+                                        : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900'
+                                        }`}
                                 >
                                     {item.name}
                                     {item.tag && (
@@ -109,20 +111,28 @@ export default function Navbar1({
                             {/* থিম টগল বাটন */}
                             <button
                                 onClick={toggleTheme}
-                                className="p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:text-[#C5A059] dark:hover:text-[#C5A059] hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:scale-105 active:scale-95"
-                                aria-label="Toggle Theme"
+                                className={`relative w-14 h-7 rounded-full p-1 transition-all duration-500 border border-slate-200 dark:border-slate-700 shadow-inner focus:outline-none 
+                               ${theme === 'dark' ? "bg-slate-800" : "bg-slate-100"}`}
                             >
-                                {theme === 'light' ? <FaMoon size={18} /> : <FaSun size={18} />}
+                                <div
+                                    className={`w-5 h-5 rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center
+                               ${theme === 'dark' ? "translate-x-7 bg-indigo-600" : "translate-x-0 bg-white"}`}
+                                >
+                                    {theme === 'dark' ? (
+                                        <IoIosMoon className="w-3 h-3 text-white" />
+                                    ) : (
+                                        <IoIosSunny className="w-3 h-3 text-yellow-500" />
+                                    )}
+                                </div>
                             </button>
 
                             {/* নতুন মডার্ন সার্চ আইকন বাটন */}
                             <button
                                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                                className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${
-                                    isSearchOpen 
-                                        ? 'bg-[#C5A059]/10 text-[#C5A059]' 
-                                        : 'text-neutral-600 dark:text-neutral-300 hover:text-[#C5A059] dark:hover:text-[#C5A059] hover:bg-neutral-100 dark:hover:bg-neutral-900'
-                                }`}
+                                className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 ${isSearchOpen
+                                    ? 'bg-[#C5A059]/10 text-[#C5A059]'
+                                    : 'text-neutral-600 dark:text-neutral-300 hover:text-[#C5A059] dark:hover:text-[#C5A059] hover:bg-neutral-100 dark:hover:bg-neutral-900'
+                                    }`}
                             >
                                 <FiSearch size={18} />
                             </button>
@@ -139,7 +149,7 @@ export default function Navbar1({
                             </Link>
 
                             {/* শপিং ব্যাগ কাউন্টার */}
-                            <button
+                            <Link to={'/cart'}
                                 onClick={onCartOpen}
                                 className="p-2.5 rounded-xl transition-all duration-300 relative group text-neutral-600 dark:text-neutral-300 hover:text-[#C5A059] dark:hover:text-[#C5A059] hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:scale-105 active:scale-95"
                             >
@@ -149,18 +159,27 @@ export default function Navbar1({
                                         {cartCount}
                                     </span>
                                 )}
-                            </button>
+                            </Link>
 
                             {/* অথেন্টিকেশন বাটন (Desktop Only) */}
                             <div className="hidden lg:flex items-center gap-2 ml-2">
-                                {isLoggedIn ? (
+                                {user ? (
                                     <>
-                                        <Link to="/dashboard" className="p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900">
-                                            <FiUser size={18} />
+                                        <Link to="/dashboard" className="flex gap-1 p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900">
+                                            <div className='w-10 h-10 rounded-[50%] overflow-hidden transition-all duration-200 hover:scale-105'>
+                                                <img src="profile.jpg" alt="profile" />
+                                            </div>
                                         </Link>
-                                        <button onClick={() => setIsLoggedIn(false)} className="p-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/25 rounded-xl transition-all duration-300">
-                                            <FiLogOut size={18} />
-                                        </button>
+                                        {user.isAdmin && (
+                                            <Link
+                                                to="/admin-dashboard"
+                                                className="group flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-400 bg-transparent text-xs font-semibold uppercase tracking-wider text-black dark:text-slate-200 transition-all duration-300 hover:bg-amber-400/10 hover:border-amber-600 dark:hover:bg-amber-400/10 dark:hover:text-amber-400 dark:hover:border-amber-400/40"
+                                            >
+                                                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+                                                Admin
+                                            </Link>
+                                        )}
+
                                     </>
                                 ) : (
                                     <>
@@ -186,9 +205,8 @@ export default function Navbar1({
                 </div>
 
                 {/* ড্রপডাউন ইনলাইন সার্চ বার (ফুল স্ক্রিন ওভারলে রিপ্লেস করা হয়েছে) */}
-                <div className={`w-full overflow-hidden transition-all duration-300 ease-in-out bg-neutral-50 dark:bg-neutral-900/50 border-t border-neutral-200 dark:border-neutral-800 ${
-                    isSearchOpen ? 'max-h-20 opacity-100 py-3' : 'max-h-0 opacity-0 pointer-events-none'
-                }`}>
+                <div className={`w-full overflow-hidden transition-all duration-300 ease-in-out bg-neutral-50 dark:bg-neutral-900/50 border-t border-neutral-200 dark:border-neutral-800 ${isSearchOpen ? 'max-h-20 opacity-100 py-3' : 'max-h-0 opacity-0 pointer-events-none'
+                    }`}>
                     <div className="max-w-3xl mx-auto px-4">
                         <form onSubmit={handleSearchSubmit} className="relative flex items-center">
                             <FiSearch className="text-[#C5A059] absolute left-4 text-base" />
@@ -200,8 +218,8 @@ export default function Navbar1({
                                 className="w-full bg-white dark:bg-neutral-950 pl-11 pr-12 py-2.5 rounded-xl text-sm text-neutral-900 dark:text-white placeholder-neutral-400 border border-neutral-200 dark:border-neutral-800 focus:outline-none focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] transition-all duration-300"
                             />
                             {searchQuery && (
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     onClick={() => setSearchQuery('')}
                                     className="absolute right-4 text-neutral-400 hover:text-neutral-600 dark:hover:text-white"
                                 >
@@ -214,12 +232,10 @@ export default function Navbar1({
             </nav>
 
             {/* মোবাইল ড্রয়ার মেনু */}
-            <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] transition-opacity duration-300 ${
-                isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-            }`}>
-                <div className={`fixed inset-y-0 right-0 w-full max-w-xs bg-white dark:bg-neutral-950 p-6 flex flex-col justify-between transform transition-transform duration-300 shadow-2xl ${
-                    isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                 }`}>
+                <div className={`fixed inset-y-0 right-0 w-full max-w-xs bg-white dark:bg-neutral-950 p-6 flex flex-col justify-between transform transition-transform duration-300 shadow-2xl ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}>
                     <div>
                         <div className="flex items-center justify-between pb-4 border-b border-neutral-100 dark:border-neutral-800">
                             <div className="flex items-center gap-2">
@@ -241,11 +257,10 @@ export default function Navbar1({
                                     key={item.path}
                                     to={item.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={({ isActive }) => `w-full flex items-center justify-between p-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 ${
-                                        isActive
-                                            ? 'bg-[#C5A059] text-neutral-950 shadow-sm'
-                                            : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-950 dark:hover:text-white'
-                                    }`}
+                                    className={({ isActive }) => `w-full flex items-center justify-between p-3 rounded-xl text-sm font-bold tracking-wide transition-all duration-200 ${isActive
+                                        ? 'bg-[#C5A059] text-neutral-950 shadow-sm'
+                                        : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-neutral-950 dark:hover:text-white'
+                                        }`}
                                 >
                                     <span>{item.name}</span>
                                     <FiChevronRight size={16} className="opacity-70" />
@@ -256,7 +271,7 @@ export default function Navbar1({
 
                     {/* মোবাইল ফুটার অ্যাকশন বাটন */}
                     <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-3">
-                        {isLoggedIn ? (
+                        {user ? (
                             <div className="flex gap-2">
                                 <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex-grow py-3 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors">
                                     <FiUser size={16} className="text-[#C5A059]" /> Dashboard

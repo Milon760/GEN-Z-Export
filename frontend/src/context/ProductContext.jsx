@@ -1,37 +1,37 @@
 import React, { createContext, useEffect, useState } from 'react'
+import axios from 'axios';
+
 
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
 
-    const [products, setProducts] = useState([]);
+    const [allProduct, setAllProduct] = useState([]);
+
+    console.log(allProduct, 'all products json');
+
+
     const [searchQuery, setSearchOuery] = useState('');
     console.log(searchQuery);
 
+
+    // all products data load
     const fetchProducts = async () => {
-        try {
-            const res = await fetch('https://gen-z-export-backend.onrender.com/api/products');
-            const allProduct = await res.json();
+        const res = await axios('http://localhost:5000/api/products');
+        console.log('product data context   :  ', res.data);
 
-            if (allProduct.success) {
-                setProducts(allProduct.payload.products)
-            }
+        setAllProduct(res.data.payload.products)
 
-        } catch (error) {
-            console.error(error);
-
-        }
     };
-
-
     useEffect(() => {
         fetchProducts();
     }, [])
 
 
 
+
     return (
-        <ProductContext.Provider value={{ products, searchQuery, setSearchOuery }}>
+        <ProductContext.Provider value={{ allProduct, searchQuery, setSearchOuery }}>
             {children}
         </ProductContext.Provider>
     )

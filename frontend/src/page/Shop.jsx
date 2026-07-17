@@ -1,25 +1,25 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ProductContext } from '../context/ProductContext';
 import ProductsFilter from '../helper/ProductsFilter';
+import GlobalLoader from '../components/GlobalLoader';
+
+import productsDataJson from './products.json'
 
 const Shop = () => {
 
 
-  const { products } = useContext(ProductContext);
-  console.log(products, 'products22');
 
-  const [selectedCategory, setSelectedCategory] = useState('all');
 
   return (
-    <div className=''>
+    <div className='m'>
       <h2 className='text-amber-600 text-2xl text-center'>Products page</h2>
        
        <ProductsFilter selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory}/>
 
       <div className=''>
         {
-          products.map((product) => (<div key={product._id} className='border border-amber-500 m-5 p-5'>
-            <img src={product.image_url} alt="products image" />
+          allProduct.map((product) => (<div key={product._id} className='border border-amber-500 m-5 p-5'>
+            <img src={product.image[0]} alt="products image" />
             <h2>{product.name}</h2>
             <p>{product.price}</p>
             <p>{product.description}</p>

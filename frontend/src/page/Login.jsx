@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiMail, FiLock, FiLoader, FiCheckCircle, FiAlertCircle, FiX, FiEye, FiEyeOff, FiKey, FiCheck } from 'react-icons/fi';
+import { FiMail, FiLock, FiLoader, FiX, FiEye, FiEyeOff, FiKey, FiCheck, FiAlertCircle } from 'react-icons/fi';
+import GlobalLoader from '../components/GlobalLoader';
 
 const Login = () => {
-  const { loginUser, isLoading } = useAuth();
+  const { successMsg, setSuccessMsg, errorMsg, setErrorMsg, loginUser, isLoading } = useAuth();
   const navigate = useNavigate();
 
   // Core Form Input State Management Configuration
@@ -15,9 +16,6 @@ const Login = () => {
 
   // Password Visibility Control State
   const [showPassword, setShowPassword] = useState(false);
-  
-  // Feedback Status Management
-  const [status, setStatus] = useState({ type: null, text: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,22 +24,29 @@ const Login = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setStatus({ type: null, text: '' });
 
     // Connect to Context Auth Action Trigger API
     const response = await loginUser(formData);
 
+    console.log(response, 'login res');
+
     if (response.success) {
-      setStatus({ type: 'success', text: 'Authentication successful! Syncing portal dashboard access...' });
-      setTimeout(() => navigate('/shop'), 1500); // Auto Route dynamic forward jump
+      setSuccessMsg(response.message || 'সফলভাবে লগইন হয়েছে!');
+      setTimeout(() => {
+        navigate('/');
+        setSuccessMsg('');
+      }, 2000);
     } else {
-      setStatus({ type: 'error', text: response.message });
+      setErrorMsg(response.message || 'লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
+      setTimeout(() => {
+        setErrorMsg('');
+      }, 4000);
     }
   };
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 overflow-x-hidden relative">
-      
+
       {/* ================= LEFT SIDE COLUMN: PREMIUM BRAND AMBIENT PROFILE ================= */}
       <div className="hidden lg:flex lg:col-span-5 bg-neutral-900 dark:bg-neutral-900/40 border-r border-neutral-200/40 dark:border-neutral-800/60 p-12 flex-col justify-between relative overflow-hidden">
         {/* Ambient Gradient Rings */}
@@ -64,7 +69,7 @@ const Login = () => {
             Portal Control Center
           </div>
           <h1 className="text-4xl xl:text-5xl font-black text-white tracking-tight leading-[1.1] uppercase">
-            Welcome <br/>Back To The <span className="text-[#C5A059]">Core.</span>
+            Welcome <br />Back To The <span className="text-[#C5A059]">Core.</span>
           </h1>
           <p className="text-xs text-neutral-400 font-medium leading-relaxed">
             Re-authenticate your synchronization terminal nodes to manage exclusive orders tracker metrics dashboard panel.
@@ -81,9 +86,9 @@ const Login = () => {
       <div className="col-span-1 lg:col-span-7 flex items-center justify-center p-6 sm:p-12 lg:p-16 relative">
         {/* Mobile View Ambient Circle Layer */}
         <div className="lg:hidden absolute top-0 right-0 w-80 h-80 bg-[#C5A059]/5 rounded-full blur-[100px] pointer-events-none" />
-        
+
         <div className="w-full max-w-md space-y-8 relative z-10">
-          
+
           {/* Mobile Only Header Logo Asset Indicator */}
           <div className="lg:hidden flex flex-col items-center text-center space-y-3">
             <div className="w-12 h-12 rounded-2xl bg-[#C5A059] text-neutral-950 font-black flex items-center justify-center text-base shadow-md">GZ</div>
@@ -97,21 +102,25 @@ const Login = () => {
           </div>
 
           {/* Context API Action System Feedbacks Notice Boxes */}
-          {status.type && (
-            <div className={`p-4 rounded-xl flex items-start gap-2 text-xs font-bold border transition-all duration-300 ${
-              status.type === 'success' 
-                ? 'bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400' 
-                : 'bg-green-500/5 dark:bg-blue-500/10 border-red-500/20 text-blue-600 dark:text-red-400'
-            }`}>
-              {status.type === 'success' ? <FiCheck className="shrink-0 mt-0.5" size={14} /> : <FiAlertCircle className="shrink-0 mt-0.5" size={14} />}
-              <span className="flex-1 text-left">{status.text}</span>
-              <button type="button" onClick={() => setStatus({ type: null, text: '' })} className="opacity-60 hover:opacity-100"><FiX size={12} /></button>
+          {successMsg && (
+            <div className="p-4 rounded-xl flex items-start gap-2 text-xs font-bold border transition-all duration-300 bg-emerald-500/5 dark:bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+              <FiCheck className="shrink-0 mt-0.5" size={14} />
+              <span className="flex-1 text-left">{successMsg}</span>
+              <button type="button" onClick={() => setSuccessMsg('')} className="opacity-60 hover:opacity-100"><FiX size={12} /></button>
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className="p-4 rounded-xl flex items-start gap-2 text-xs font-bold border transition-all duration-300 bg-rose-500/5 dark:bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400">
+              <FiAlertCircle className="shrink-0 mt-0.5 text-rose-500" size={14} />
+              <span className="flex-1 text-left">{errorMsg}</span>
+              <button type="button" onClick={() => setErrorMsg('')} className="opacity-60 hover:opacity-100"><FiX size={12} /></button>
             </div>
           )}
 
           {/* Submission Functional Form Elements Canvas */}
           <form onSubmit={handleFormSubmit} className="space-y-5 text-left">
-            
+
             {/* Comm Email Input Container */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 flex items-center gap-1.5">
@@ -120,7 +129,7 @@ const Login = () => {
               <input
                 type="email" name="email" required value={formData.email} onChange={handleInputChange} disabled={isLoading}
                 placeholder="crew@example.com"
-                className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800/80 rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:border-[#C5A059] focus:ring-4 focus:ring-[#C5A059]/5"
+                className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800/80 rounded-xl px-4 py-3.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:border-[#C5A059] focus:ring-4 focus:ring-[#C5A059]/5 disabled:opacity-50"
               />
             </div>
 
@@ -138,7 +147,7 @@ const Login = () => {
                 <input
                   type={showPassword ? 'text' : 'password'} name="password" required value={formData.password} onChange={handleInputChange} disabled={isLoading}
                   placeholder="••••••••"
-                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800/80 rounded-xl pl-4 pr-10 py-3.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:border-[#C5A059] focus:ring-4 focus:ring-[#C5A059]/5"
+                  className="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800/80 rounded-xl pl-4 pr-10 py-3.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus:border-[#C5A059] focus:ring-4 focus:ring-[#C5A059]/5 disabled:opacity-50"
                 />
                 <button
                   type="button" onClick={() => setShowPassword(!showPassword)}

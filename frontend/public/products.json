@@ -1,0 +1,225 @@
+[
+    {
+        "id": 1,
+        "name": "Premium Slim Fit Cotton Shirt",
+        "category": "shirt",
+        "price": 1450,
+        "original_price": 1800,
+        "currency": "BDT",
+        "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colors": [
+            "White",
+            "Sky Blue",
+            "Navy Blue"
+        ],
+        "stock": 45,
+        "rating": 4.7,
+        "image": "/shirt.jpg",
+        "description": "100% premium cotton slim fit formal shirt for everyday office wear."
+    },
+    {
+        "id": 2,
+        "name": "Traditional Semi-Long Cotton Panjabi",
+        "category": "panjabi",
+        "price": 2200,
+        "original_price": 2200,
+        "currency": "BDT",
+        "sizes": [
+            "38",
+            "40",
+            "42",
+            "44"
+        ],
+        "colors": [
+            "Maroon",
+            "Black",
+            "White"
+        ],
+        "stock": 20,
+        "rating": 4.5,
+        "image": "/t-shirt.jpg",
+        "description": "Comfortable cotton semi-long panjabi with elegant embroidery work on the collar."
+    },
+    {
+        "id": 3,
+        "name": "Stretchable Slim Fit Denim Jeans",
+        "category": "pant",
+        "price": 1850,
+        "original_price": 2400,
+        "currency": "BDT",
+        "sizes": [
+            "30",
+            "32",
+            "34",
+            "36"
+        ],
+        "colors": [
+            "Deep Blue",
+            "Light Wash"
+        ],
+        "stock": 60,
+        "rating": 4.8,
+        "image": "/pant.jpg",
+        "description": "Durable and stretchable denim pant for ultimate daily comfort."
+    },
+    {
+        "id": 4,
+        "name": "Heavyweight Cotton Oversized T-Shirt",
+        "category": "t-shirt",
+        "price": 650,
+        "original_price": 850,
+        "currency": "BDT",
+        "sizes": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "colors": [
+            "Black",
+            "Beige",
+            "Olive Green"
+        ],
+        "stock": 110,
+        "rating": 4.6,
+        "image": "/t-shirt.jpg",
+        "description": "260 GSM drop-shoulder oversized t-shirt made with breathable cotton fabric."
+    },
+    {
+        "id": 5,
+        "name": "Casual Linen Full Sleeve Shirt",
+        "category": "shirt",
+        "price": 1600,
+        "original_price": 1950,
+        "currency": "BDT",
+        "sizes": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "colors": [
+            "Olive",
+            "Khaki",
+            "White"
+        ],
+        "stock": 35,
+        "rating": 4.4,
+        "image": "/shirt1.jpg",
+        "description": "Lightweight linen blend shirt perfect for summer and casual outings."
+    },
+    {
+        "id": 6,
+        "name": "Luxury Georgette Kabli Set",
+        "category": "panjabi",
+        "price": 3800,
+        "original_price": 4500,
+        "currency": "BDT",
+        "sizes": [
+            "40",
+            "42",
+            "44"
+        ],
+        "colors": [
+            "Jet Black",
+            "Navy Blue"
+        ],
+        "stock": 15,
+        "rating": 4.9,
+        "image": "/t-shirt.jpg",
+        "description": "Premium Kabli set with matching pajama, designed for festivals and wedding events."
+    },
+    {
+        "id": 7,
+        "name": "Slim Fit Cotton Chino Pant",
+        "category": "pant",
+        "price": 1250,
+        "original_price": 1600,
+        "currency": "BDT",
+        "sizes": [
+            "28",
+            "30",
+            "32",
+            "34",
+            "36"
+        ],
+        "colors": [
+            "Beige",
+            "Black",
+            "Grey"
+        ],
+        "stock": 50,
+        "rating": 4.3,
+        "image": "/pant1.jpg",
+        "description": "Versatile smart-casual chinos that pair perfectly with shirts or t-shirts."
+    },
+    {
+        "id": 8,
+        "name": "Minimalist Solid Color Polo T-Shirt",
+        "category": "t-shirt",
+        "price": 800,
+        "original_price": 1100,
+        "currency": "BDT",
+        "sizes": [
+            "S",
+            "M",
+            "L",
+            "XL"
+        ],
+        "colors": [
+            "Red",
+            "Royal Blue",
+            "Charcoal"
+        ],
+        "stock": 85,
+        "rating": 4.5,
+        "image": "/t-shirt.jpg",
+        "description": "Classic pique cotton polo shirt with a clean minimalist design."
+    },
+    {
+        "id": 9,
+        "name": "Cuban Collar Printed Rayon Shirt",
+        "category": "shirt",
+        "price": 1150,
+        "original_price": 1500,
+        "currency": "BDT",
+        "sizes": [
+            "M",
+            "L",
+            "XL"
+        ],
+        "colors": [
+            "Floral Print",
+            "Abstract Black"
+        ],
+        "stock": 25,
+        "rating": 4.2,
+        "image": "/shirt2.jpg",
+        "description": "Trendy relaxed-fit printed resort shirt made of soft rayon fabric."
+    },
+    {
+        "id": 10,
+        "name": "Digital Printed Viscose Panjabi",
+        "category": "panjabi",
+        "price": 1950,
+        "original_price": 2500,
+        "currency": "BDT",
+        "sizes": [
+            "38",
+            "40",
+            "42",
+            "44"
+        ],
+        "colors": [
+            "Multicolor Blue",
+            "Multicolor Maroon"
+        ],
+        "stock": 40,
+        "rating": 4.6,
+        "image": "/t-shirt.jpg",
+        "description": "Modern vibrant digital prints on premium soft viscose fabric for a stylish look."
+    }
+]
