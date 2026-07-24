@@ -29,7 +29,7 @@ const userSchema = new Schema({
         require: [true, 'Password is require'],
         trim: true,
         minlength: [6, 'The length of password can be minimum 6 characters.'],
-        set: (v) => bcryptjs.hashSync(v, bcryptjs.genSaltSync(10))
+        select: false,
     },
     phone: {
         type: Number,
@@ -37,7 +37,6 @@ const userSchema = new Schema({
     },
     address: {
         type: String,
-
     },
 
     image: {
@@ -55,9 +54,32 @@ const userSchema = new Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    otp: {
+        type: String
+    },
+    resetOtp: {
+        type: String,
+        select: false,
+    },
+    resetExpires: {
+        type: Date,
+        select: false,
+    },
 
 }, { timestamps: true });
+
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) return;
+
+    const salt = await bcryptjs.genSalt(10);
+    this.password = await bcryptjs.hash(this.password, salt);
+});
+
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcryptjs.compare(enteredPassword, this.password);
+};
 
 const User = model('User', userSchema);
 

@@ -92,11 +92,11 @@ const SingleProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pt-28 pb-16 px-4 md:px-8 transition-colors duration-500">
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pt-28 md:pt-32 pb-16 px-4 md:px-8 transition-colors duration-500">
       <div className="max-w-6xl mx-auto space-y-12">
         
         {/* ⬅️ ব্যাক বাটন */}
-        <Link to="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-zinc-400 hover:text-[#C5A059] transition-colors mb-2 group">
+        <Link to={-1} className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-zinc-400 hover:text-[#C5A059] transition-colors mb-2 group">
           <FaArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" /> Back to Products
         </Link>
 

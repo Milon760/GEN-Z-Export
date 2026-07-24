@@ -1,44 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaTrash, FaArrowLeft, FaShoppingBag, FaPlus, FaMinus, FaTicketAlt, FaLock } from 'react-icons/fa';
+import { ProductContext } from '../context/ProductContext';
 
 const Cart = () => {
-  // ডামি কার্ট ডাটা (রিয়েল প্রজেক্টে এটি আপনার CartContext বা Redux থেকে আসবে)
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Premium Slim Fit Cotton Shirt",
-      category: "shirt",
-      price: 1450,
-      original_price: 1800,
-      currency: "BDT",
-      size: "M",
-      color: "Sky Blue",
-      image: "/shirt.jpg",
-      quantity: 1,
-      stock: 5,
-    },
-    {
-      id: 2,
-      name: "Casual Denim Jacket",
-      category: "jacket",
-      price: 2450,
-      original_price: 2900,
-      currency: "BDT",
-      size: "XL",
-      color: "Navy Blue",
-      image: "/jacket.jpg",
-      quantity: 2,
-      stock: 10,
-    }
-  ]);
+
+  const { cart, setCart } = useContext(ProductContext);
 
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0); // BDT flat discount
 
   // কোয়ান্টিটি হ্যান্ডলার
   const updateQuantity = (id, type) => {
-    setCartItems(prev => prev.map(item => {
+    setCart(prev => prev.map(item => {
       if (item.id === id) {
         if (type === 'inc' && item.quantity < item.stock) {
           return { ...item, quantity: item.quantity + 1 };
@@ -52,11 +26,11 @@ const Cart = () => {
 
   // কার্ট থেকে আইটেম ডিলিট
   const removeItem = (id) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+    setCart(prev => prev.filter(item => item.id !== id));
   };
 
   // হিসেব-নিকেশ
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const shippingFee = subtotal > 2000 ? 0 : 80; // ২০০০ টাকার উপরে ফ্রি ডেলিভারি
   const total = subtotal + shippingFee - discount;
 
@@ -71,7 +45,7 @@ const Cart = () => {
   };
 
   // কার্ট খালি থাকলে যা দেখাবে
-  if (cartItems.length === 0) {
+  if (cart.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-zinc-950 text-center">
         <div className="w-20 h-20 bg-amber-50 dark:bg-amber-950/10 text-[#C5A059] rounded-full flex items-center justify-center mb-6 animate-bounce">
@@ -82,7 +56,7 @@ const Cart = () => {
           Looks like you haven't added anything to your cart yet. Let's find some premium outfits for you!
         </p>
         <Link 
-          to="/" 
+          to="/shop" 
           className="inline-flex items-center gap-2 px-6 py-3 bg-[#C5A059] text-zinc-950 font-bold text-xs rounded-xl hover:bg-[#b08e4f] active:scale-95 transition-all shadow-md"
         >
           <FaArrowLeft size={10} /> Explore Shop
@@ -92,19 +66,19 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pt-28 pb-16 px-4 md:px-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 pt-28 md:p-32 pb-16 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         
         {/* 🏷️ পেজ হেডার */}
         <div className="flex items-center justify-between mb-8 border-b border-slate-200/40 dark:border-zinc-800 pb-5">
           <div>
             <h1 className="text-2xl font-black text-slate-950 dark:text-white flex items-center gap-2.5">
-              Shopping Cart <span className="text-sm font-bold bg-[#C5A059]/10 text-[#C5A059] px-2.5 py-0.5 rounded-full">{cartItems.length}</span>
+              Shopping Cart <span className="text-sm font-bold bg-[#C5A059]/10 text-[#C5A059] px-2.5 py-0.5 rounded-full">{cart.length}</span>
             </h1>
             <p className="text-xs text-slate-400 dark:text-zinc-500 mt-1">Manage your items and proceed to checkout.</p>
           </div>
           <Link 
-            to="/" 
+            to={-1} 
             className="inline-flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-zinc-400 hover:text-[#C5A059] transition-colors group"
           >
             <FaArrowLeft size={10} className="group-hover:-translate-x-1 transition-transform" /> Back to Shop
@@ -116,7 +90,7 @@ const Cart = () => {
           
           {/* 🛒 ১. বাম পাশ (২ কলাম): কার্ট প্রোডাক্ট লিস্ট */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item) => (
+            {cart.map((item) => (
               <div 
                 key={item.id} 
                 className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-slate-200/60 dark:border-zinc-800 p-4 rounded-2xl shadow-sm hover:shadow-md/5 transition-all"
@@ -256,9 +230,9 @@ const Cart = () => {
               </div>
 
               {/* চেকআউট বাটন */}
-              <button className="w-full flex items-center justify-center gap-2 py-3 bg-[#C5A059] hover:bg-[#b08e4f] text-zinc-950 text-xs font-black rounded-xl transition-all shadow-md">
+              <Link  to={'/checkout'} className="w-full flex items-center justify-center gap-2 py-3 bg-[#C5A059] hover:bg-[#b08e4f] text-zinc-950 text-xs font-black rounded-xl transition-all shadow-md">
                 <FaLock size={10} /> Proceed to Checkout
-              </button>
+              </Link>
 
               <div className="text-center">
                 <p className="text-[10px] text-slate-400 flex items-center justify-center gap-1.5">

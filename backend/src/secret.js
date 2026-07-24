@@ -11,6 +11,13 @@ const cloudinaryUserName = process.env.CLOUDINARY_USER_NAME;
 const cloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
 const cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
 
+const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL;
+const brevoSenderName = process.env.BREVO_SENDER_NAME;
+const brevoHost = process.env.SMTP_HOST;
+const brevoPort = process.env.SMTP_PORT;
+const brevoUser = process.env.SMTP_USER;
+const brevoPass = process.env.SMTP_PASS;
+
 
 module.exports = {
     serverPort,
@@ -22,5 +29,12 @@ module.exports = {
     clientURL,
     cloudinaryUserName,
     cloudinaryApiKey,
-    cloudinaryApiSecret
+    cloudinaryApiSecret,
+
+    brevoSenderEmail,
+    brevoSenderName,
+    brevoHost,
+    brevoPort,
+    brevoUser,
+    brevoPass
 };

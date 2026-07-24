@@ -1,4 +1,3 @@
-const data = require('../data');
 const Products = require('../modle/productModle');
 const User = require("../modle/userModle");
 
@@ -8,15 +7,10 @@ const seedUser = async (req, res) => {
         // deleting all existing users 
         await User.deleteMany({});
 
-        // instering new users 
-        const users = await User.insertMany(data.users)
-        console.log('user created successfully');
-
         // successful resoponse 
         return res.status(200).json({
             success: true,
-            message: 'user created successfully',
-            users,
+            message: 'all user deleted successfully',
         });
 
     } catch (error) {

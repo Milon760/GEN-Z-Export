@@ -1,42 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { 
-  FiUser, FiMail, FiPhone, FiMapPin, FiPackage, 
-  FiClock, FiCheckCircle, FiShield, FiCreditCard, 
-  FiLoader, FiLogOut, FiShoppingBag, FiTruck, FiAlertCircle 
+import {
+  FiUser, FiMail, FiPhone, FiMapPin, FiPackage,
+  FiClock, FiCheckCircle, FiShield, FiCreditCard,
+  FiLogOut, FiShoppingBag, FiTruck, FiAlertCircle,
+  FiSettings
 } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
+import GlobalLoader from '../components/GlobalLoader';
+import ProfileUpdate from './ProfileUpdate';
 
 const Dashboard = () => {
-  // context থেকে নতুন 'loading' স্টেটটি সহ নিয়ে আসা হলো
-  const { user, myOrder, isLoading, loading, userLogout } = useAuth();
+  const { user, myOrder, isLoading, loading, setSuccessMsg, userLogout } = useAuth();
+
+  // Settings Popup Modal State
+  const [isSetting, setIsSetting] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await userLogout();
-    navigate('/login');
+    userLogout();
+    setTimeout(() => {
+      navigate('/login');
+      if (setSuccessMsg) setSuccessMsg('');
+    }, 2000);
   };
 
-  // ================= 1. SAFE LOAD GUARD =================
-  // রিফ্রেশ জনিত কারণে সেশন ভেরিফিকেশন পেন্ডিং থাকলে প্রিমিয়াম লোডার দেখাবে
+  // Safe Guard
   if (isLoading || loading || !user) {
-    return (
-      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center p-6 text-neutral-400">
-        <FiLoader className="w-8 h-8 text-[#C5A059] animate-spin mb-2" />
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#C5A059]">Synchronizing Secure Profile Node...</span>
-      </div>
-    );
+    return <GlobalLoader />;
   }
 
-  // সেফ ফলব্যাক
   const safeOrders = myOrder || [];
-
-  // ================= 2. DYNAMIC ANALYTICS CALCULATIONS =================
   const totalSpent = safeOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
   const processingOrders = safeOrders.filter(o => o.orderStatus === 'Processing' || o.orderStatus === 'Pending').length;
   const completedOrders = safeOrders.filter(o => o.orderStatus === 'Delivered').length;
 
-  // Order status badge এর জন্য কালার হেল্পার ফাংশন
   const getStatusStyles = (status) => {
     switch (status?.toLowerCase()) {
       case 'delivered':
@@ -52,7 +51,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 pt-32 pb-12 select-none">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 pt-32 pb-12 select-none relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
         {/* ================= HEADER HERO BANNER ================= */}
@@ -62,39 +61,50 @@ const Dashboard = () => {
 
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4 text-left">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-[#C5A059]/30 bg-neutral-800 text-[#C5A059] font-black flex items-center justify-center text-xl tracking-tighter shadow-lg relative">
-                {user?.name ? user.name.substring(0, 2).toUpperCase() : 'GZ'}
-                {user?.isVerified && (
-                  <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 text-neutral-950 rounded-full flex items-center justify-center text-[10px] border-2 border-neutral-900 shadow">
-                    <FiCheckCircle />
-                  </span>
-                )}
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-[#C5A059]/30 bg-neutral-800 text-[#C5A059] font-black flex items-center justify-center overflow-clip text-xl tracking-tighter shadow-lg relative">
+                <img src="/profile.jpg" alt={user.name} className="w-full h-full object-cover" />
               </div>
               <div className="space-y-1">
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight">{user?.name}</h1>
+
                   {user?.isAdmin && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md border border-[#C5A059]/40 bg-[#C5A059]/10 text-[#C5A059] text-[9px] font-black tracking-widest uppercase">
-                      <FiShield size={10} /> Admin Staff Node
-                    </span>
+                    <Link to={'/admin-dashboard'} className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md border border-[#C5A059]/40 bg-[#C5A059]/10 text-[#C5A059] text-[12px] font-black tracking-widest uppercase">
+                      <FiShield size={18} /> Admin Panel
+                    </Link>
                   )}
                 </div>
+                {user?.isVerified && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-black tracking-wide">Verified</span>
+                    <FiCheckCircle size={18} className="text-green-600" />
+                  </div>
+                )}
                 <p className="text-xs text-neutral-400 font-medium tracking-wide">Identity Node ID: <span className="font-mono text-[11px] text-neutral-500">{user?._id}</span></p>
               </div>
             </div>
-            
-            {/* লগআউট বাটনকে হিরো ব্যানারের ডান পাশে নিয়ে আসা হলো ক্লিন লুকের জন্য */}
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl border border-neutral-700 text-neutral-300 bg-neutral-800/50 hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-900/60 transition-all duration-300 shadow-sm"
-            >
-              <FiLogOut className="text-sm" />
-              <span>Log Out Node</span>
-            </button>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsSetting(true)}
+                className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl border border-neutral-700 text-neutral-300 bg-neutral-800/50 hover:bg-[#C5A059]/20 hover:text-[#C5A059] hover:border-[#C5A059]/40 transition-all duration-300 shadow-sm"
+              >
+                <FiSettings className="text-sm" />
+                <span>Settings</span>
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl border border-neutral-700 text-neutral-300 bg-neutral-800/50 hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-900/60 transition-all duration-300 shadow-sm"
+              >
+                <FiLogOut className="text-sm" />
+                <span>Log Out</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* ================= NEW FEATURE: METRICS SUMMARY CARDS ================= */}
+        {/* ================= METRICS SUMMARY CARDS ================= */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 rounded-2xl p-5 flex items-center justify-between text-left shadow-sm">
             <div>
@@ -103,7 +113,7 @@ const Dashboard = () => {
             </div>
             <div className="w-12 h-12 rounded-xl bg-[#C5A059]/10 text-[#C5A059] flex items-center justify-center"><FiCreditCard size={20} /></div>
           </div>
-          
+
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 rounded-2xl p-5 flex items-center justify-between text-left shadow-sm">
             <div>
               <span className="block text-[10px] font-black uppercase tracking-wider text-neutral-400">Active Transmissions</span>
@@ -123,7 +133,6 @@ const Dashboard = () => {
 
         {/* ================= PRIMARY GRID CONTENT SECTION ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
           {/* LEFT COLUMN: PROFILE DETAILS */}
           <div className="lg:col-span-4 bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800/80 rounded-[2rem] p-6 space-y-6 text-left shadow-sm">
             <h3 className="font-black text-xs uppercase tracking-[0.2em] text-[#C5A059] border-b border-neutral-100 dark:border-neutral-800/60 pb-3">Identity Framework Mappings</h3>
@@ -163,9 +172,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: ACTIVE ORDER TRANSFERS */}
+          {/* RIGHT COLUMN: ORDERS */}
           <div className="lg:col-span-8 space-y-4 text-left">
-
             <div className="flex items-center justify-between border-b border-neutral-200/60 dark:border-neutral-800/60 pb-3">
               <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-2">
                 <FiPackage size={16} className="text-[#C5A059]" /> Transmission Pipeline Tracker
@@ -175,7 +183,6 @@ const Dashboard = () => {
               </span>
             </div>
 
-            {/* Empty State Call to Action Link */}
             {safeOrders.length === 0 && (
               <div className="p-12 text-center bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-[2rem] space-y-4 flex flex-col items-center justify-center shadow-sm">
                 <div className="w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center text-neutral-400"><FiAlertCircle size={22} /></div>
@@ -183,8 +190,8 @@ const Dashboard = () => {
                   <p className="text-sm font-black uppercase tracking-wider">No Transaction Logs Registered</p>
                   <p className="text-xs text-neutral-400">You haven't ordered any premium apparel yet.</p>
                 </div>
-                <Link 
-                  to="/shop" 
+                <Link
+                  to="/shop"
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-neutral-900 text-white dark:bg-[#C5A059] dark:text-neutral-950 text-xs font-black uppercase tracking-wider rounded-xl transition-all hover:opacity-90 shadow-md"
                 >
                   <FiShoppingBag /> Teleport To Shop
@@ -192,7 +199,6 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* Order Loop Card */}
             <div className="space-y-4">
               {safeOrders.map((order) => (
                 <div
@@ -209,10 +215,8 @@ const Dashboard = () => {
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase tracking-wider rounded-lg">
                         <FiCreditCard size={11} /> {order.paymentMethod || 'COD'}
                       </span>
-
-                      {/* Dynamic Color Badge Based on Status */}
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider rounded-lg border ${getStatusStyles(order.orderStatus)}`}>
-                        <FiClock size={11} className={order.orderStatus === 'Processing' ? 'animate-spin' : ''} style={{ animationDuration: '4s' }} /> 
+                        <FiClock size={11} className={order.orderStatus === 'Processing' ? 'animate-spin' : ''} style={{ animationDuration: '4s' }} />
                         {order.orderStatus}
                       </span>
                     </div>
@@ -250,15 +254,25 @@ const Dashboard = () => {
                       <span className="text-sm text-[#C5A059] tracking-tight">{order.totalPrice} BDT</span>
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>
-
           </div>
         </div>
 
       </div>
+
+      {/* ================= PROFILE UPDATE MODAL COMPONENT ================= */}
+      <ProfileUpdate 
+        isOpen={isSetting} 
+        onClose={() => setIsSetting(false)} 
+        currentUser={user}
+        onUpdateSuccess={() => {
+          // রিলোড বা ডাটা সিঙ্ক যদি দরকার হয়
+          window.location.reload();
+        }}
+      />
+
     </div>
   );
 };

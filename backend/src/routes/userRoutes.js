@@ -4,13 +4,19 @@ const {
     getUsers,
     registerHandle,
     loginHandle,
-    UserVerification,
     userFindWithId,
-    userDeleteWithId,
     userUpdateWithId,
-    PasswordReset,
+    userDeleteWithId,
+
+    forgotPassword,
+    verifyResetOtp,
+    resetPassword,
+
     getUserProfile,
     userLogout,
+    verifyOtp,
+    updateUserProfile,
+    updateUserPassword,
 } = require('../controllers/userControllers');
 const protect = require('../middlewares/authMiddleware');
 
@@ -18,23 +24,33 @@ const protect = require('../middlewares/authMiddleware');
 const route = express.Router();
 
 
-// route create /auth
+// numbar 1  route create /auth
 route.post('/register', registerHandle);
 
-// verify user
-route.post('/verify', UserVerification);
+// numbar 2 verify user
+route.post('/verify', verifyOtp);
 
-// login router
+// numbar 3 login router
 route.post('/login', loginHandle);
 
-// user profine access 
+// numbar 4 user profine access 
 route.get('/profile', protect, getUserProfile);
 
-// user logout handler
+// numbar 5 update user profile 
+route.put('/profile', protect, updateUserProfile);
+
+// numbar 6 update password
+route.put('/update-password', protect, updateUserPassword);
+
+// numbar 7 user logout handler
 route.post('/logout', userLogout);
 
-// Reset password
-route.post('forgot-password', PasswordReset);
+// numbar 8 step 1 Reset password
+route.post('/forgot-password', forgotPassword);
+// step 2
+route.post('/verify-otp', verifyResetOtp);
+// step 3
+route.put('/reset-password', resetPassword);
 
 // user fine router
 route.get("/users", getUsers);

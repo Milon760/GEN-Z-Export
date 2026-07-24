@@ -165,10 +165,11 @@ export default function Navbar1({
                             <div className="hidden lg:flex items-center gap-2 ml-2">
                                 {user ? (
                                     <>
-                                        <Link to="/dashboard" className="flex gap-1 p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900">
+                                        <Link to="/dashboard" className="relative flex gap-1 p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900">
                                             <div className='w-10 h-10 rounded-[50%] overflow-hidden transition-all duration-200 hover:scale-105'>
                                                 <img src="profile.jpg" alt="profile" />
                                             </div>
+                                            <div className='bg-green-600 w-2.5 h-2.5 rounded-[50%] absolute right-2.5 bottom-2.5'></div>
                                         </Link>
                                         {user.isAdmin && (
                                             <Link
@@ -276,9 +277,6 @@ export default function Navbar1({
                                 <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex-grow py-3 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors">
                                     <FiUser size={16} className="text-[#C5A059]" /> Dashboard
                                 </Link>
-                                <button onClick={() => { setIsLoggedIn(false); setIsMobileMenuOpen(false); }} className="px-4 bg-red-50 dark:bg-red-950/25 text-red-500 rounded-xl hover:bg-red-100 transition-colors">
-                                    <FiLogOut size={16} />
-                                </button>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-2">

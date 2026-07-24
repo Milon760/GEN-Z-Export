@@ -1,15 +1,15 @@
 const nodemailer = require('nodemailer');
-const { smtpUserName, smtpUserPassword } = require('../secret');
+const { brevoHost, brevoPort, brevoUser, brevoPass, brevoSenderEmail } = require('../secret');
 
 
 // Create a transporter using SMTP
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: brevoHost,
+  port: brevoPort,
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
   auth: {
-    user: smtpUserName,
-    pass: smtpUserPassword,
+    user: brevoUser,
+    pass: brevoPass,
   },
 });
 
@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 const emailWithNodeMailer = async (emailData) => {
     try {
         const mailOptions = {
-            from: smtpUserName,
+            from: brevoSenderEmail,
             to: emailData.email,
             subject: emailData.subject,
             html: emailData.html

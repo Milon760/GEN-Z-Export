@@ -10,13 +10,9 @@ export const AuthProvider = ({ children }) => {
     const [successMsg, setSuccessMsg] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    
-    // 🟢 নতুন স্টেট: এটি দিয়ে ট্র্যাক করা হবে অ্যাপের প্রাথমিক সেশন চেক শেষ হয়েছে কিনা
-    const [loading, setLoading] = useState(true); 
 
-    // Dynamic State Tracker for Debugging
-    console.log('User State:', user);
-    console.log('Order State:', myOrder);
+    // নতুন স্টেট: এটি দিয়ে ট্র্যাক করা হবে অ্যাপের প্রাথমিক সেশন চেক শেষ হয়েছে কিনা
+    const [loading, setLoading] = useState(true);
 
     // ================= 1. USER PROFILE DATA LOAD =================
     const userProfileData = useCallback(async () => {
@@ -27,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
             if (result.success) {
                 setUser(result.user);
-                return result.user; 
+                return result.user;
             } else {
                 console.log('Profile context unauthorized or missing token');
                 setUser(null);
@@ -53,16 +49,17 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Order history API failed:', error.response?.data?.message || error.message);
-            setMyOrder([]); 
+            setMyOrder([]);
         }
     }, []);
 
     // ================= 3. REGISTER USER =================
-    const registerUser = async (registrationData) => {
+    const registerUser1 = async (registrationData) => {
         setIsLoading(true);
         try {
             const response = await axios.post('http://localhost:5000/auth/register', registrationData);
             const result = response.data;
+            console.log(result, 'regis')
             if (result.success) {
                 return { success: true, message: result.message || 'Registration successful!' };
             } else {
@@ -120,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
     // ================= 6. USER LOGOUT =================
     const userLogout = async () => {
-        setIsLoading(true); 
+        setIsLoading(true);
         try {
             const response = await API.post('/auth/logout');
             setUser(null);
@@ -134,7 +131,7 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setMyOrder(null);
         } finally {
-            setIsLoading(false); 
+            setIsLoading(false);
         }
     };
 
@@ -147,13 +144,72 @@ export const AuthProvider = ({ children }) => {
             if (verifiedUser) {
                 await myOrderHistroy();
             } else {
-                setMyOrder([]); 
+                setMyOrder([]);
             }
             setLoading(false); // 🟢 সেশন চেক করা শেষ হলো (ইউজার পাওয়া যাক বা না যাক)
         };
 
         initializeAuthSession();
     }, [userProfileData, myOrderHistroy]);
+
+
+
+    // ১. রেজিস্ট্রেশন ফাংশন (OTP টোকেন পাঠাবে)
+    const registerUser = async (formData) => {
+        setIsLoading(true);
+        setErrorMsg('');
+        setSuccessMsg('');
+
+        try {
+            const res = await axios.post('http://localhost:5000/auth/register', formData);
+
+            // সেশন স্টোরেজে সেভ
+            if (res.data?.payload?.token) {
+                sessionStorage.setItem('activationToken', res.data.payload.token);
+                sessionStorage.setItem('userEmail', formData.email);
+            }
+
+            setSuccessMsg(res.data.message || 'OTP আপনার ইমেলে পাঠানো হয়েছে।');
+            return { success: true, message: res.data.message };
+        } catch (error) {
+            const msg = error.response?.data?.message || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।';
+            setErrorMsg(msg);
+            return { success: false, message: msg };
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // ২. OTP ভেরিফিকেশন ফাংশন
+    const verifyOtp = async (userOtp) => {
+        setIsLoading(true);
+        setErrorMsg('');
+        setSuccessMsg('');
+
+        const token = sessionStorage.getItem('activationToken');
+
+        try {
+            const res = await axios.post('http://localhost:5000/auth/verify', { userOtp, token });
+
+            // সফল হলে সেশন ক্লিয়ার
+            sessionStorage.removeItem('activationToken');
+            sessionStorage.removeItem('userEmail');
+
+            setSuccessMsg(res.data.message || 'অ্যাকাউন্ট ভেরিফাইড হয়েছে!');
+            return { success: true, message: res.data.message };
+        } catch (error) {
+            const msg = error.response?.data?.message || 'ভুল OTP কোড! আবার চেষ্টা করুন।';
+            setErrorMsg(msg);
+            return { success: false, message: msg };
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+// Provider value তে updateUserProfile টি অবশ্যই রপ্তানি (export) করবে:
+// <AuthContext.Provider value={{ user, setUser, updateUserProfile, ... }}>
+
 
     const userData = {
         user,
@@ -163,12 +219,13 @@ export const AuthProvider = ({ children }) => {
         errorMsg,
         setErrorMsg,
         isLoading,
-        loading, // 🟢 এটি রাউট প্রটেক্টরে পাঠানোর জন্য এক্সপোর্ট করা হলো
-        registerUser,
+        loading,
         verifyUserEmail,
         loginUser,
         userProfileData,
         myOrderHistroy,
+        registerUser,
+        verifyOtp,
         userLogout,
     };
 

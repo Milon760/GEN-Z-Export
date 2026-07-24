@@ -33,7 +33,7 @@ const Login = () => {
     if (response.success) {
       setSuccessMsg(response.message || 'সফলভাবে লগইন হয়েছে!');
       setTimeout(() => {
-        navigate('/');
+        navigate('/dashboard');
         setSuccessMsg('');
       }, 2000);
     } else {
@@ -140,7 +140,7 @@ const Login = () => {
                   <FiLock size={12} /> Secure Account Password
                 </label>
                 <Link to="/forgot-password" className="text-[10px] font-black text-[#C5A059] hover:underline uppercase tracking-wider">
-                  Reset Token?
+                  Forgot-Password?
                 </Link>
               </div>
               <div className="relative">

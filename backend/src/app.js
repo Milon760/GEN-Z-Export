@@ -6,6 +6,7 @@ const createError = require('http-errors');
 
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const bannerRoute = require('./routes/bannerRoute')
 const seddRouter = require('./routes/seedRouter');
 const { errorResponse } = require('./controllers/responseController');
 
@@ -36,6 +37,11 @@ app.use("/auth", userRoutes);
 
 // Products Routers
 app.use("/api", productRoutes);
+
+
+// banner slider route
+app.use('/api/banner', bannerRoute);
+
 
 // seed router 
 app.use('/', seddRouter)

@@ -3,8 +3,8 @@ const data = {
 
         {
             name: 'md Milon Mia',
-            email: 'mdmilonmiah200@gmail.com',
-            password: "Milon2005",
+            email: 'mdmilonmiah2005@gmail.com',
+            password: "Milon2005@",
             phone: '01782671468',
             address: 'sadulapur',
             isAdmin: true,
@@ -13,14 +13,14 @@ const data = {
         {
             name: 'md Anamul Mia',
             email: 'mdanamulmiah2005@gmail.com',
-            password: "Milon2005",
+            password: "Milon2005@",
             phone: '0174003333',
             address: 'sadulapur, gaibandha'
         },
         {
             name: 'md Akash Mia',
             email: 'mdakashmiah2005@gmail.com',
-            password: "Milon2005",
+            password: "Milon2005@",
             phone: '0178489484',
             address: 'sadulapur, lakmipur'
         },

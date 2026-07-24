@@ -16,6 +16,7 @@ const Navbar = ({ handleLogout }) => {
     { path: '/admin-dashboard/product-create', label: 'Create Product', icon: <FaBoxOpen size={20} /> },
     { path: '/admin-dashboard/orders', label: 'Orders', icon: <FaTruck size={20} /> },
     { path: '/admin-dashboard/setting', label: 'Setting', icon: <IoIosSettings size={20} /> },
+    { path: '/admin-dashboard/banner', label: 'Banner', icon: <IoIosSettings size={20} /> },
   ];
 
   // সাইডবারের কমন UI কন্টেন্ট (যা মোবাইল ও ডেস্কটপ উভয়ের জন্য ব্যবহার হবে)
