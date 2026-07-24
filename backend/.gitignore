@@ -1,0 +1,29 @@
+# Node modules (সবচেয়ে ভারী ফোল্ডার, যা গিটহাবে পাঠানো যাবে না)
+node_modules/
+
+# Environment variables (সব API key, database URL, password রাখার ফাইল)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs (এরর বা ব্যাকএন্ড লগের ফাইল)
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production / Build folder (যদি কোনো বিল্ড তৈরি হয়)
+dist/
+build/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor settings
+.vscode/
+.idea/
