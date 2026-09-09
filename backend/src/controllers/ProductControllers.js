@@ -1,25 +1,24 @@
-const createError = require('http-errors');
-const { successResponse } = require('./responseController');
-const { findWithId } = require('../services/findWithId');
-const { deleteImage } = require('../helper/deleteImage');
-const Products = require('../modle/productModle');
-const Cart = require('../modle/cart');
-const Order = require('../modle/order');
-const cloudinary = require('../config/cloudinary');
-
+const createError = require("http-errors");
+const { successResponse } = require("./responseController");
+const { findWithId } = require("../services/findWithId");
+const { deleteImage } = require("../helper/deleteImage");
+const Products = require("../modle/productModle");
+const Cart = require("../modle/cart");
+const Order = require("../modle/order");
+const cloudinary = require("../config/cloudinary");
 
 // get all product
 const getProducts = async (req, res, next) => {
   try {
-    const search = req.query.search || '';
+    const search = req.query.search || "";
 
-    const searchRegExp = new RegExp('.*' + search + '.*', 'i');
+    const searchRegExp = new RegExp(".*" + search + ".*", "i");
 
     const filter = {
       $or: [
         { name: { $regex: searchRegExp } },
         { category: { $regex: searchRegExp } },
-      ]
+      ],
     };
 
     let productQuery = Products.find(filter).sort({ createAt: -1 });
@@ -32,8 +31,7 @@ const getProducts = async (req, res, next) => {
       const skip = (page - 1) * limit;
 
       productQuery.skip(skip).limit(limit);
-    };
-
+    }
 
     const products = await productQuery;
 
@@ -41,15 +39,12 @@ const getProducts = async (req, res, next) => {
     const totalProduct = await Products.countDocuments(filter);
 
     if (!products || products.length === 0) {
-      throw createError(404, 'No products found matching your search');
+      throw createError(404, "No products found matching your search");
     }
 
     if (limit > 0) {
       totalPage = Math.ceil(totalProduct / limit);
-
     }
-
-
 
     successResponse(res, {
       status: 200,
@@ -61,15 +56,14 @@ const getProducts = async (req, res, next) => {
           currentPage: page,
           previousPage: page > 1 ? page - 1 : null,
           nextPage: page < totalPage ? page + 1 : null,
-          totalProduct: totalProduct
+          totalProduct: totalProduct,
         },
-      }
+      },
     });
   } catch (error) {
     next(error);
   }
 };
-
 
 // get Product by id
 const getProductById = async (req, res, next) => {
@@ -78,61 +72,114 @@ const getProductById = async (req, res, next) => {
 
     const product = await Products.findById(id);
 
-    if (!product) throw createError(404, 'Product not found')
+    if (!product) throw createError(404, "Product not found");
 
     successResponse(res, {
       status: 200,
       message: "Product were Returned sucessfully",
-      payload: { product }
+      payload: { product },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
-
 
 // Create a Product
 const createProducts = async (req, res, next) => {
   try {
-    const { id, name, category, price, original_price, size, colors, stock, rating, description, image } = req.body || {};
+    const {
+      id,
+      name,
+      category,
+      price,
+      original_price,
+      size,
+      colors,
+      stock,
+      rating,
+      description,
+      image,
+    } = req.body || {};
+
+    console.log(
+      "products data",
+      id,
+      name,
+      category,
+      price,
+      original_price,
+      size,
+      colors,
+      stock,
+      rating,
+      description,
+      image,
+    );
 
     // ১. সব ডাটা ঠিকঠাক আছে কিনা যাচাই (৪০০ ব্যাড রিকোয়েস্ট)
-    if (!id || !name || !category || !price || !original_price || !size || !colors || !stock || !rating || !description) {
-      return res.status(400).json({ success: false, message: 'All fields are required and cannot be empty.' });
+    if (
+      !id ||
+      !name ||
+      !category ||
+      !price ||
+      !original_price ||
+      !size ||
+      !colors ||
+      !stock ||
+      !rating ||
+      !description
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required and cannot be empty.",
+      });
     }
 
     // ২. ইমেজ ফাইল পাঠানো হয়েছে কিনা যাচাই করা
     if (!req.file) {
-      return res.status(400).json({ success: false, message: 'Product image is required.' });
+      return res
+        .status(400)
+        .json({ success: false, message: "Product image is required." });
     }
 
     // ৩. ক্লাউডিনারিতে ইমেজ আপলোড
-    const fileBase64 = req.file.buffer.toString('base64');
+    const fileBase64 = req.file.buffer.toString("base64");
     const fileUrl = `data:${req.file.mimetype};base64,${fileBase64}`;
     const uploadResponse = await cloudinary.uploader.upload(fileUrl, {
-      folder: 'products',
+      folder: "products",
     });
     const image_url = uploadResponse.secure_url;
 
     // ৪. নতুন প্রোডাক্ট তৈরি ও সেভ করা
     const newProduct = new Products({
-      id, name, category, price, original_price, size, colors, stock, rating, description, image,
+      id,
+      name,
+      category,
+      price,
+      original_price,
+      size,
+      colors,
+      stock,
+      rating,
+      description,
+      image,
     });
     const product = await newProduct.save();
 
     // ৫. সেভ না হলে ৫০০ ইন্টারনাল সার্ভার এরর
     if (!product) {
-      return res.status(500).json({ success: false, message: 'Product creation failed due to a database error.' });
+      return res.status(500).json({
+        success: false,
+        message: "Product creation failed due to a database error.",
+      });
     }
 
     // ৬. সফল রেসপন্স
     return successResponse(res, {
       status: 201,
       message: "Product created successfully",
-      payload: { product }
+      payload: { product },
     });
-
   } catch (error) {
     // যেকোনো আনএক্সপেক্টেড এরর কনসোলে দেখার জন্য
     console.error("Error in createProducts:", error);
@@ -140,13 +187,10 @@ const createProducts = async (req, res, next) => {
     // আসল এরর মেসেজটি ক্লায়েন্টকে পাঠানো হচ্ছে
     return res.status(error.status || 500).json({
       success: false,
-      message: error.message || 'failed to create products'
+      message: error.message || "failed to create products",
     });
   }
 };
-
-
-
 
 // Delete a Product with id
 const deleteProducts = async (req, res, next) => {
@@ -154,54 +198,52 @@ const deleteProducts = async (req, res, next) => {
     const id = req.params.id;
 
     if (!id) {
-      throw createError(404, 'No-empty value not accepted')
+      throw createError(404, "No-empty value not accepted");
     }
 
     const product = await Products.findByIdAndDelete(id);
 
     if (!product) {
-      throw createError(401, 'Product not fount ')
-    };
+      throw createError(401, "Product not fount ");
+    }
 
     successResponse(res, {
       status: 201,
       message: "Products deleted sucessfully",
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 // update product by id
 const updateProducts = async (req, res, next) => {
   try {
-
     const id = req.params.id;
     const updatedData = req.body;
 
     if (!id) {
-      throw createError(404, 'No-empty value not accepted')
+      throw createError(404, "No-empty value not accepted");
     }
 
-    const updatedProduct = await Products.findByIdAndUpdate(
-      id, updatedData, { new: true, runValidators: true }
-    );
+    const updatedProduct = await Products.findByIdAndUpdate(id, updatedData, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!updatedProduct) {
-      throw createError(401, 'Product not fount ')
-    };
-
+      throw createError(401, "Product not fount ");
+    }
 
     successResponse(res, {
       status: 201,
       message: "Products updated sucessfully",
-      payload: { updatedProduct }
+      payload: { updatedProduct },
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 // cart
 const addProductToCart = async (req, res, next) => {
@@ -210,7 +252,7 @@ const addProductToCart = async (req, res, next) => {
 
     const product = await Products.findById(productId);
 
-    if (!product) throw createError(401, 'Product not found');
+    if (!product) throw createError(401, "Product not found");
 
     const actualPrice = product.price;
     const qty = Number(quantity);
@@ -218,7 +260,9 @@ const addProductToCart = async (req, res, next) => {
     let cart = await Cart.findOne({ userId });
 
     if (cart) {
-      const productIndex = cart.products.findIndex(p => p.productId.toString() === productId);
+      const productIndex = cart.products.findIndex(
+        (p) => p.productId.toString() === productId,
+      );
       if (productIndex > -1) {
         cart.products[productIndex].quantity += qty;
       } else {
@@ -232,39 +276,35 @@ const addProductToCart = async (req, res, next) => {
         status: 200,
         message: "Cart updated sucessfully",
       });
-
     } else {
       const newCart = await Cart.create({
         userId,
         products: [{ productId, price: actualPrice, quantity: qty }],
-        totalPrice: actualPrice * qty
+        totalPrice: actualPrice * qty,
       });
       successResponse(res, {
         status: 201,
         message: "Cart Created sucessfully",
-        payload: { newCart }
+        payload: { newCart },
       });
     }
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 // order confrim
 const orderProducts = async (req, res, next) => {
   try {
-    
     const { userId, paymentMethod, shippingAddress } = req.body || {};
     if (!userId || !paymentMethod || !shippingAddress) {
-      throw createError(400, 'not empty value accepted')
+      throw createError(400, "not empty value accepted");
     }
 
     let cart = await Cart.findOne({ userId });
 
     if (!cart || cart.products.length === 0) {
-      throw createError(400, 'Cart not found')
+      throw createError(400, "Cart not found");
     }
 
     const newOrder = new Order({
@@ -279,41 +319,36 @@ const orderProducts = async (req, res, next) => {
 
     const deletedCart = await Cart.findOneAndDelete({ userId });
     if (deletedCart) {
-      console.log('cart was deleted');
-
+      console.log("cart was deleted");
     }
-    console.log('cart no detele');
+    console.log("cart no detele");
 
     successResponse(res, {
       status: 201,
       message: "Order Requiest sucessfully",
-      payload: { newOrder }
+      payload: { newOrder },
     });
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
 
 // get order
 const getOrderHistory = async (req, res, next) => {
   try {
-
     const orderHistory = await Order.find();
 
     if (!orderHistory || orderHistory.length === 0) {
-      throw createError(400, 'Order Histroy not found ')
+      throw createError(400, "Order Histroy not found ");
     }
 
     successResponse(res, {
       status: 200,
       message: "Order History reatruned sucessfully",
-      payload: { orderHistory }
+      payload: { orderHistory },
     });
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -323,28 +358,23 @@ const getMyOrders = async (req, res, next) => {
     const userId = req.body;
     const id = req.user.userId;
 
-    console.log('use', id);
-    
+    console.log("use", id);
 
-    const userOrders = await Order.find({userId: id}).sort({ createAt: -1 });
-
+    const userOrders = await Order.find({ userId: id }).sort({ createAt: -1 });
 
     if (!userOrders || userOrders.length === 0) {
-      throw createError(400, 'Order not found ')
+      throw createError(400, "Order not found ");
     }
 
     successResponse(res, {
       status: 200,
       message: "Order reatruned sucessfully",
-      payload: { userOrders }
+      payload: { userOrders },
     });
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
-
 
 module.exports = {
   getProducts,
@@ -356,5 +386,4 @@ module.exports = {
   orderProducts,
   getOrderHistory,
   getMyOrders,
-
-}
+};

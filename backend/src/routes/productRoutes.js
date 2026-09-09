@@ -1,47 +1,31 @@
-const express = require('express');
+const express = require("express");
 const {
-    getProducts,
-    createProducts,
-    deleteProducts,
-    getProductById,
-    updateProducts,
-    addProductToCart,
-    orderProducts,
-    getOrderHistory,
-    getMyOrders,
-} = require('../controllers/ProductControllers');
-const upload = require('../middlewares/uploadMiddleware');
-const protect = require('../middlewares/authMiddleware');
+  getProducts,
 
+  getProductById,
+
+  addProductToCart,
+  orderProducts,
+
+  getMyOrders,
+} = require("../controllers/ProductControllers");
+
+const { protect } = require("../middlewares/authMiddleware");
 
 const route = express.Router();
 
+// get all product
+route.get("/", getProducts);
 
-// create product /api
-route.post("/products", upload.single('image'), createProducts);
+route.get("/products/:id", getProductById);
 
 //  add to cart handler
 route.post("/products/cart/add", addProductToCart);
 
 // order handler
-route.post("/products/order/place", orderProducts)
+route.post("/products/order/place", orderProducts);
 
 // my orders handler
-route.get("/products/my-orders", protect, getMyOrders)
-
-// get all order access only admin
-route.get("/products/orders", getOrderHistory)
-
-// get all product
-route.get("/products", getProducts)
-
-route.get("/products/:id", getProductById)
-
-// update product
-route.put("/products/:id", updateProducts);
-
-// delete product
-route.delete("/products/:id", deleteProducts)
-
+route.get("/products/my-orders", protect, getMyOrders);
 
 module.exports = route;

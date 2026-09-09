@@ -1,30 +1,39 @@
-import React, { createContext, useEffect, useState } from 'react';
-import API from '../helper/API'; // আপনার নিজস্ব Axios ইন্টারসেপ্টর/হেল্পার
+import { createContext, useContext, useEffect, useState } from "react";
+import API from "../helper/API";
 
-export const AdminContext = createContext();
+export const AdminContext = createContext(null);
 
-const AdminProvider = ({ children }) => {
-  // 📦 গ্লোবাল স্টেটসমূহ
+export const AdminProvider = ({ children }) => {
   const [allUser, setAllUser] = useState([]);
   const [allProduct, setAllProduct] = useState([]);
   const [allOrder, setAllOrder] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [userPagination, setUserPagination] = useState({ totalUser: 0, currentPage: 1, totalPages: 1 });
+  const [userPagination, setUserPagination] = useState({
+    totalUser: 0,
+    currentPage: 1,
+    totalPages: 1,
+  });
 
-  // 👥 ১. ইউজার ডাটা ফেচ করার ফাংশন (পেজিনেশন সাপোর্ট সহ)
+  console.log(userPagination.totalUser);
+
+  // 👥 ১. ইউজার ডাটা fetch করার ফাংশন
   const fetchUsers = async (page = 1) => {
     setIsLoading(true);
     try {
-      const response = await API.get(`http://localhost:5000/auth/users?page=${page}`);
+      const response = await API.get(`/admin/users?page=${page}`);
       const data = response.data;
+
+      console.log("data user", data);
 
       if (data.success) {
         setAllUser(data.payload.users || []);
         if (data.payload.pagination) {
-          setUserPagination(data.payload.pagination);
+          setUserPagination({
+            totalUser: data.payload.pagination.totalUser,
+            currentPage: Number(data.payload.pagination.currentPage),
+            totalPages: Number(data.payload.pagination.totalPage) || 1,
+          });
         }
-      } else {
-        console.log('Users fetch failed');
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -33,110 +42,170 @@ const AdminProvider = ({ children }) => {
     }
   };
 
-  // 📦 ২. প্রোডাক্ট ডাটা ফেচ এবং লাইভ সার্চ করার ফাংশন
-  const fetchProducts = async (query = '') => {
+  // 👤 ২. নতুন ইউজার অ্যাড
+  const addUser = async (userData) => {
+    try {
+      const response = await API.post("/admin/users/add", userData);
+
+      if (response.data.success) {
+        // ১ নম্বর পেজে নতুন ডাটা রিফেচ হবে
+        await fetchUsers(1);
+        return { success: true, message: "User added successfully!" };
+      }
+      return {
+        success: false,
+        message: response.data.message || "Failed to add user",
+      };
+    } catch (error) {
+      console.error("Error adding user:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Server error",
+      };
+    }
+  };
+
+  // ✏️ ৩. ইউজার আপডেট
+  const updateUser = async (id, updatedData) => {
+    try {
+      const response = await API.put(`/admin/users/${id}`, updatedData);
+      if (response.data.success) {
+        // ইনস্ট্যান্ট লোকাল স্টেট আপডেট (লাইভ ফিডব্যাক)
+        setAllUser((prev) =>
+          prev.map((u) => (u._id === id ? { ...u, ...updatedData } : u)),
+        );
+        // ব্যাকএন্ড থেকে তাজা ডাটা ফেচ
+        fetchUsers(userPagination.currentPage || 1);
+        return { success: true, message: "User updated successfully!" };
+      }
+      return {
+        success: false,
+        message: response.data.message || "Update failed",
+      };
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Server error",
+      };
+    }
+  };
+
+  // 🗑️ ৪. ইউজার ডিলিট
+  const deleteUser = async (id) => {
+    try {
+      const response = await API.delete(`/admin/users/${id}`);
+      if (response.data.success) {
+        setAllUser((prev) => prev.filter((user) => user._id !== id));
+        fetchUsers(userPagination.currentPage || 1);
+        return { success: true, message: "User deleted successfully!" };
+      }
+      return {
+        success: false,
+        message: response.data.message || "Delete failed",
+      };
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "Server error",
+      };
+    }
+  };
+
+  // 📦 ৫. প্রোডাক্ট ও অর্ডার ফেচ
+  const fetchProducts = async (query = "") => {
     setIsLoading(true);
     try {
-      // সার্চ কুয়েরি থাকলে সেটি ব্যাকএন্ডে পাঠানো হবে
-      const response = await API.get(`http://localhost:5000/api/products?search=${query}&limit=20`);
-      const data = response.data;
-
-      if (data.success) {
-        setAllProduct(data.payload.products || []);
-      } else {
-        setAllProduct([]);
-        console.log('Products fetch failed');
+      const response = await API.get(
+        `/admin/products?search=${query}&limit=20`,
+      );
+      if (response.data.success) {
+        setAllProduct(response.data.payload.products || []);
       }
     } catch (error) {
       console.error("Error fetching products:", error);
-      setAllProduct([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 🚚 ৩. অর্ডার হিস্ট্রি ফেচ করার ফাংশন
-  const fetchOrders = async () => {
-    setIsLoading(true);
-    try {
-      const response = await API.get('http://localhost:5000/api/products/orders');
-      const data = response.data;
-
-      if (data.success) {
-        setAllOrder(data.payload.orderHistory || []);
-      } else {
-        console.log('Orders fetch failed');
-      }
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 📝 ৫. প্রোডাক্ট আপডেট করার অ্যাকশন ফাংশন
   const updateProduct = async (id, updatedData) => {
-    setIsLoading(true);
     try {
-      const response = await API.put(`http://localhost:5000/api/products/${id}`, updatedData);
-
+      const response = await API.put(`/admin/products/${id}`, updatedData);
       if (response.data.success || response.status === 200) {
-        // স্টেট থেকে ওই প্রোডাক্টের ডেটা ইনস্ট্যান্ট আপডেট করা
         setAllProduct((prev) =>
-          prev.map((product) => (product._id === id ? { ...product, ...updatedData } : product))
+          prev.map((p) => (p._id === id ? { ...p, ...updatedData } : p)),
         );
         return { success: true, message: "Product updated successfully!" };
-      } else {
-        return { success: false, message: response.data.message || "Update failed" };
       }
     } catch (error) {
-      console.error("Error updating product:", error);
-      return { success: false, message: error.message || "Server Error" };
-    } finally {
-      setIsLoading(false);
+      console.error(error);
     }
   };
 
-  // 🗑️ ৪. প্রোডাক্ট ডিলিট করার অ্যাকশন ফাংশন
   const deleteProduct = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
-      const response = await API.delete(`http://localhost:5000/api/products/${id}`);
+      const response = await API.delete(`/admin/products/${id}`);
       if (response.data.success || response.status === 200) {
-        // স্টেট থেকে সাথে সাথে প্রোডাক্টটি রিমুভ করা
-        setAllProduct((prev) => prev.filter((product) => product._id !== id));
+        setAllProduct((prev) => prev.filter((p) => p._id !== id));
       }
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error(error);
     }
   };
 
-  // 🔄 প্রথমবার পেজ লোড হলে সব ডেটা একসাথে কল হবে
+  // -------------- products -------
+
+  const createProduct = async (productData) => {
+    try {
+      const res = await API.post("/admin/products", productData);
+
+      console.log(res, "res");
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await API.get("/admin/products/orders");
+      if (response.data.success) {
+        setAllOrder(response.data.payload.orderHistory || []);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(1);
     fetchProducts();
     fetchOrders();
   }, []);
 
-  // 🤝 গ্লোবাল কন্টেক্সট ভ্যালু যা সব কম্পোনেন্ট ব্যবহার করতে পারবে
-  const allAdminData = {
+  const value = {
     allUser,
     allProduct,
     allOrder,
     isLoading,
     userPagination,
     fetchUsers,
+    addUser,
+    updateUser,
+    deleteUser,
     fetchProducts,
-    fetchOrders,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    fetchOrders,
+    //
+    createProduct,
   };
 
   return (
-    <AdminContext.Provider value={allAdminData}>
-      {children}
-    </AdminContext.Provider>
+    <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
   );
 };
 
-export default AdminProvider;
+export const useAdmin = () => useContext(AdminContext);

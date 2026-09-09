@@ -1,39 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "../components/Root";
-import NotFound from "../page/NotFound";
-import Home from "../page/Home";
-import Shop from "../page/Shop";
+
+// root page start
+import UserPrivateRoute from "../components/UserPrivateRoute";
+import PublicRoute from "../components/PublickRoute";
+// close root page
+
+// admin page start
 import AdminDashboard from "../page/admin/AdminDashboard";
 import AdminLayout from "../page/admin/AdminLayout";
 import Products from "../page/admin/Products";
 import Users from "../page/admin/Users";
 import Order from "../page/admin/Order";
 import Setting from "../page/admin/Setting";
-import Pant from "../page/Pant";
-import Panjabi from "../page/Panjabi";
-import Shirt from "../page/Shirt";
-import TShirt from "../page/TShirt";
-import ProductCreate from "../page/admin/ProductCreate1";
-import UserPrivateRoute from "../components/UserPrivateRoute";
-import Register from "../../Extrafile/Register";
-import Register0 from "../page/Register0";
-import Login from "../page/Login";
-import Verify from "../page/Verify";
-import AdminProfile from "../page/admin/AdminProfile";
-import RegisterSuccess from "../page/RegisterSuccess";
-import Dashboard from "../page/Dashboard";
-import SingleProduct from "../page/SingleProduct";
-import Wishlist from "../page/Wishlist";
-import Cart from "../page/Cart";
-import Checkout from "../page/Checkout";
+import ProductCreate from "../page/admin/ProductCreate";
 import AdminPrivateRoute from "../components/AdminPrivateRoute";
-import PublicRoute from "../components/PublickRoute";
+import AdminProfile from "../page/admin/AdminProfile";
 import AdminBannerDashboard from "../page/admin/AdminBanner";
-import ForgotPassword from "../page/ForgotPassword";
-import AboutUs from "../page/AboutUs";
-import ContactUs from "../page/ContactUs";
-import PrivacyPolicy from "../page/PrivacyPolicy";
-import ReturnPolicy from "../page/ReturnPolicy";
+// close admin page
+
+// user page start
+import NotFound from "../page/user/NotFound";
+import Home from "../page/user/Home";
+import Shop from "../page/user/Shop";
+import Register from "../page/user/Register";
+import Login from "../page/user/Login";
+import Verify from "../page/user/Verify";
+import RegisterSuccess from "../page/user/RegisterSuccess";
+import Dashboard from "../page/user/Dashboard";
+import SingleProduct from "../page/user/SingleProduct";
+import Wishlist from "../page/user/Wishlist";
+import Cart from "../page/user/Cart";
+import Checkout from "../page/user/Checkout";
+import ForgotPassword from "../page/user/ForgotPassword";
+import AboutUs from "../page/user/AboutUs";
+import ContactUs from "../page/user/ContactUs";
+import PrivacyPolicy from "../page/user/PrivacyPolicy";
+import ReturnPolicy from "../page/user/ReturnPolicy";
+import CategoryPage from "../page/user/CategoryPage";
+import OAuthSuccess from "../page/user/OAuthSuccess";
+import Terms from "../page/user/Trams";
+import CustomerChatbot from "../components/CustomerChatbot";
+import AdminProductGenerator from "../page/admin/AdminProductGenerator";
 
 export const router = createBrowserRouter([
   {
@@ -45,27 +53,15 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "shop/pant",
-        element: <Pant />,
-      },
-      {
-        path: "shop/panjabi",
-        element: <Panjabi />,
-      },
-      {
-        path: "shop/shirt",
-        element: <Shirt />,
-      },
-      {
-        path: "shop/tshirt",
-        element: <Register />,
-      },
-      {
         path: "/shop",
         element: <Shop />,
       },
       {
-        path: "/shop/:id",
+        path: "/oauth-success",
+        element: <OAuthSuccess />,
+      },
+      {
+        path: "/shop/category/:category/:id",
         element: <SingleProduct />,
       },
       {
@@ -80,10 +76,7 @@ export const router = createBrowserRouter([
         path: "/wishlist",
         element: <Wishlist />,
       },
-      {
-        path: "/forgot-password",
-        element: <ForgotPassword />,
-      },
+
       {
         path: "/aboutus",
         element: <AboutUs />,
@@ -93,45 +86,66 @@ export const router = createBrowserRouter([
         element: <ContactUs />,
       },
       {
-        path: "/privacypolicy",
+        path: "/chat",
+        element: <CustomerChatbot />,
+      },
+      {
+        path: "/privacy-policy",
         element: <PrivacyPolicy />,
       },
       {
-        path: "/trams&condition",
+        path: "/terms",
+        element: <Terms />,
+      },
+      {
+        path: "/returns",
         element: <ReturnPolicy />,
       },
       {
-        element: <UserPrivateRoute />,
-        children: [
-          {
-            path: "/cart",
-            element: <Cart />,
-          },
-          {
-            path: "/checkout",
-            element: <Checkout />,
-          },
-          {
-            path: "/dashboard",
-            element: <Dashboard />,
-          },
-        ],
-      },
-      {
-        element: <PublicRoute />,
-        children: [
-          {
-            path: "register",
-            element: <Register0 />,
-          },
-          {
-            path: "login",
-            element: <Login />,
-          },
-        ],
+        path: "/shop/category/:categoryName",
+        element: <CategoryPage />,
       },
     ],
   },
+
+  ///
+  {
+    element: <UserPrivateRoute />,
+    children: [
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+    ],
+  },
+
+  // public routes
+  {
+    element: <PublicRoute />,
+    children: [
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword />,
+      },
+    ],
+  },
+
   {
     element: <AdminPrivateRoute />,
     children: [
@@ -156,11 +170,15 @@ export const router = createBrowserRouter([
             element: <ProductCreate />,
           },
           {
+            path: "genared-product",
+            element: <AdminProductGenerator />,
+          },
+          {
             path: "orders",
             element: <Order />,
           },
           {
-            path: "setting",
+            path: "settings",
             element: <Setting />,
           },
           {
