@@ -18,7 +18,7 @@ const {
   updateProducts,
 
   getOrderHistory,
-} = require("../controllers/admin/ProductControllers");
+} = require("../controllers/admin/productControllers");
 
 const {
   protect,

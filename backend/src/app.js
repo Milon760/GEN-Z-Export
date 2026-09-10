@@ -7,10 +7,10 @@ const passport = require("passport");
 require("dotenv").config();
 
 const authRouter = require("./routes/authRoutes");
-const productRoutes = require("./routes/productRoutes");
-const chatRoute = require("./routes/aiRoutes");
-const bannerRoute = require("./routes/bannerRoute");
-const adminRoutes = require("./routes/adminRoutes");
+const productRouter = require("./routes/productRoutes");
+const chatRouter = require("./routes/aiRoutes");
+const bannerRouter = require("./routes/bannerRoute");
+const adminRouter = require("./routes/adminRoutes");
 
 const { errorResponse } = require("./controllers/responseController");
 
@@ -44,16 +44,16 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 
 // Products Routers
-app.use("/api/products", productRoutes);
+app.use("/api/products", productRouter);
 
 // ai chat route
-app.use("/api/ai", chatRoute);
+app.use("/api/ai", chatRouter);
 
 // banner slider route
-app.use("/api/banner", bannerRoute);
+app.use("/api/banner", bannerRouter);
 
 // admin controller route
-app.use("/api/admin", adminRoutes);
+app.use("/api/admin", adminRouter);
 
 // cliend errror handling
 app.use((req, res, next) => {
