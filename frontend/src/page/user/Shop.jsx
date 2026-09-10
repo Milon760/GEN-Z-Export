@@ -1,6 +1,6 @@
-import { useState, useContext, useMemo } from "react";
+import { useState, useMemo } from "react";
 
-import { ProductContext } from "../../context/ProductContext"; // পাথ ঠিক আছে
+import { useProducts } from "../../context/ProductContext"; // পাথ ঠিক আছে
 import { FiSearch, FiSliders, FiChevronDown, FiX } from "react-icons/fi";
 import ShopBanner from "../../components/ShopBanner";
 
@@ -12,7 +12,7 @@ const Shop = () => {
     allProduct = [],
     searchQuery = "",
     setSearchOuery: setSearchQuery,
-  } = useContext(ProductContext);
+  } = useProducts();
 
   // Core Filtering States Configuration
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -74,10 +74,9 @@ const Shop = () => {
   }, [allProduct, searchQuery, selectedCategory, selectedSize, sortBy]);
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 pt-20 pb-10 md:pb-20">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 pt-20 sm:pt-24 pb-10 md:pb-20">
+      <ShopBanner />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        <ShopBanner />
-
         {/* ================= CONTROLS ACTION UTILITY SECTION ================= */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center border-b border-neutral-200/60 dark:border-neutral-800/60 pb-6">
           {/* 🔍 Dynamic Search Input with focus animations & clear button */}
@@ -294,20 +293,20 @@ const Shop = () => {
           </div>
         </div>
       )}
-      {/* ai button set up */}
 
       {/* Floating AI Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center space-x-2.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 text-white px-5 py-3 rounded-full shadow-[0_10px_25px_-5px_rgba(124,58,237,0.4)] transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium group cursor-pointer"
+        className="fixed bottom-6 right-6 z-40 flex items-center space-x-2 sm:space-x-2.5 bg-gradient-to-r from-[#C5A059] via-[#D4AF37] to-[#B38F48] hover:from-[#B38F48] hover:via-[#C5A059] hover:to-[#A37E37] text-neutral-950 px-2 sm:px-4 py-1 sm:py-2 rounded-full shadow-[0_10px_25px_-5px_rgba(197,160,89,0.4)] transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#C5A059]/40 font-bold group cursor-pointer border border-[#FFE29A]/30"
       >
         <div className="relative flex items-center justify-center">
-          <span className="absolute inline-flex h-5 w-5 rounded-full bg-pink-400 opacity-75 animate-ping group-hover:opacity-100"></span>
-          <span className="relative text-base transform group-hover:rotate-12 transition-transform duration-300">
+          {/* গোল্ডেন পিং প্যাকগ্রাউন্ড অ্যানিমেশন */}
+          <span className="absolute inline-flex h-4 sm:h-5 w-4 sm:w-5 rounded-full bg-[#FFE29A] opacity-75 animate-ping group-hover:opacity-100"></span>
+          <span className="relative text-base transform group-hover:rotate-6 transition-transform duration-300">
             ✨
           </span>
         </div>
-        <span className="text-sm font-semibold tracking-wide shadow-sm">
+        <span className="text-sm font-semibold tracking-wide uppercase">
           Ask AI
         </span>
       </button>

@@ -271,15 +271,21 @@ import {
   FiMapPin,
   FiPhone,
 } from "react-icons/fi";
+import { useProducts } from "../context/ProductContext";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
 
-  const handleSubscribe = (e) => {
+  const { subscribed } = useProducts();
+
+  const handleSubscribe = async (e) => {
     e.preventDefault();
-    if (email.trim()) {
-      alert(`Subscribed successfully with: ${email}`);
-      setEmail("");
+
+    try {
+      const res = await subscribed(email);
+      console.log(res, "res subceibe");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -307,21 +313,35 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-white dark:bg-[#0a0a0a] text-neutral-600 dark:text-neutral-400 font-sans border-t border-neutral-200 dark:border-neutral-800/80 transition-colors duration-300 select-none antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {/* Top Section */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-5 pb-12 border-b border-neutral-200 dark:border-neutral-800/80">
           {/* Brand Info Section (Mobile-e Full Width col-span-2) */}
           <div className="col-span-2 sm:col-span-2 space-y-5 text-left">
-            <div className="w-fit">
+            {/* logo */}
+            <div className="w-fit ">
               <Link
                 to="/"
-                className="flex items-center gap-3 group focus:outline-none"
+                className="flex items-center gap-2 sm:gap-3 group focus:outline-none"
               >
                 {/* Creative Geometric Diamond Badge */}
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex items-center justify-center ">
+                  {/* Background Subtle Glow on Hover */}
                   <div className="absolute inset-0 rotate-45 bg-[#C5A059]/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative w-10 h-10 rotate-45 border-2 border-[#C5A059] bg-slate-100/80 dark:bg-neutral-900/80 backdrop-blur-sm group-hover:border-neutral-900 dark:group-hover:border-white shadow-sm group-hover:shadow-lg group-hover:shadow-[#C5A059]/20 transition-all duration-500 rounded-lg flex items-center justify-center">
-                    <span className="-rotate-45 font-black text-base text-[#C5A059] dark:text-[#E6C687] group-hover:scale-110 transition-all duration-300 select-none">
+
+                  {/* Diamond Shape Box */}
+                  <div
+                    className="relative w-7 sm:w-9 h-7 sm:h-9 rotate-45 border-2 border-[#C5A059] 
+                        bg-slate-100/80 dark:bg-neutral-900/80 backdrop-blur-sm
+                        group-hover:border-neutral-900 dark:group-hover:border-white 
+                        shadow-sm group-hover:shadow-lg group-hover:shadow-[#C5A059]/20 
+                        transition-all duration-500 rounded-lg flex items-center justify-center"
+                  >
+                    {/* Inner GZ Text */}
+                    <span
+                      className="-rotate-45 text-sm sm:text-[17px] font-black text-base text-[#C5A059] 
+                    dark:text-[#E6C687] group-hover:scale-110 transition-all duration-300 select-none"
+                    >
                       GZ
                     </span>
                   </div>
@@ -330,21 +350,37 @@ export default function Footer() {
                 {/* Brand Identity Typography */}
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1.5 leading-none">
-                    <span className="font-black text-xl tracking-wide text-neutral-900 dark:text-neutral-100 group-hover:text-[#C5A059] dark:group-hover:text-[#E6C687] transition-colors duration-300 drop-shadow-xs">
+                    {/* High-Contrast Dynamic Title */}
+                    <span
+                      className="font-black text-sm sm:text-lg tracking-wide 
+                    text-neutral-900 dark:text-neutral-100 
+                    group-hover:text-[#C5A059] dark:group-hover:text-[#E6C687] 
+                    transition-colors duration-300 drop-shadow-xs"
+                    >
                       GEN
                       <span className="text-[#C5A059] group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
                         -
                       </span>
                       Z
                     </span>
+
+                    {/* Eye-Catching Rotating Diamond Accent */}
                     <span className="w-2 h-2 rotate-45 bg-[#C5A059] shadow-md transition-all duration-500 group-hover:scale-125 group-hover:rotate-[225deg]" />
                   </div>
 
+                  {/* EXPORT Subtitle */}
                   <div className="flex items-center ml-0.5">
-                    <span className="text-[9px] font-extrabold tracking-[0.35em] uppercase text-neutral-700 dark:text-[#C5A059] group-hover:text-neutral-950 dark:group-hover:text-white transition-colors duration-300">
+                    <span
+                      className="text-[7px] sm:text-[9px] font-extrabold tracking-[0.35em] uppercase 
+                    text-[#C5A059] 
+                    group-hover:text-neutral-950 dark:group-hover:text-white 
+                    transition-colors duration-300"
+                    >
                       EXPORT
                     </span>
-                    <span className="h-[2px] w-3 bg-[#C5A059] opacity-80 group-hover:w-5 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
+
+                    {/* Expanding Decorative Glow Line */}
+                    <span className="h-[2px] w-2 bg-[#C5A059] opacity-80 group-hover:w-4 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
                   </div>
                 </div>
               </Link>

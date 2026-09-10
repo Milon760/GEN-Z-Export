@@ -1,10 +1,10 @@
 const createError = require("http-errors");
 const bcrypt = require("bcryptjs");
 
-const User = require("../modle/userModle");
-const { successResponse, errorResponse } = require("./responseController");
-const { findWithId } = require("../services/findWithId");
-const { deleteImage } = require("../helper/deleteImage");
+const User = require("../../modle/userModle");
+const { successResponse, errorResponse } = require("../responseController");
+const { findWithId } = require("../../services/findWithId");
+const { deleteImage } = require("../../helper/deleteImage");
 
 // add user
 const addUsers = async (req, res, next) => {

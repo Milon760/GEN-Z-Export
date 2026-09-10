@@ -1,10 +1,11 @@
 import React, { createContext, useEffect, useState } from "react";
 import API from "../helper/API";
 import { toast } from "sonner";
+import { useContext } from "react";
 
 export const ProductContext = createContext();
 
-const ProductProvider = ({ children }) => {
+export const ProductProvider = ({ children }) => {
   const [allProduct, setAllProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // 👈 লোডিং স্টেট
   const [searchQuery, setSearchQuery] = useState("");
@@ -142,6 +143,20 @@ const ProductProvider = ({ children }) => {
     toast.success("কার্ট থেকে প্রোডাক্টটি সরানো হয়েছে!");
   };
 
+  // subscribed
+  const subscribed = async (email) => {
+    console.log(email);
+
+    try {
+      const res = await API.post("/products/subscribe", { email });
+      console.log(res.message, "lll");
+
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // 📦 Provider Value
   const productsInfo = {
     allProduct,
@@ -157,6 +172,8 @@ const ProductProvider = ({ children }) => {
     setFavorites,
     addToFavorites,
     removeFromFavorites,
+
+    subscribed,
   };
 
   return (
@@ -166,4 +183,4 @@ const ProductProvider = ({ children }) => {
   );
 };
 
-export default ProductProvider;
+export const useProducts = () => useContext(ProductContext);

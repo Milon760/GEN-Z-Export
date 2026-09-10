@@ -108,7 +108,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  ///
+  /// user private routes
   {
     element: <UserPrivateRoute />,
     children: [
@@ -199,70 +199,3 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
 ]);
-
-// import { lazy } from 'react'
-// import { createBrowserRouter } from 'react-router-dom'
-// import Root from '../components/Root';
-// import NotFound from '../page/NotFound';
-// import Home from '../page/Home';
-// import Shop from '../page/Shop';
-// import Dashboard from '../page/admin/Dashboard';
-// import AdminLayout from '../page/admin/AdminLayout';
-// import Products from '../page/admin/Products';
-// import Users from '../page/admin/Users';
-// import Order from '../page/admin/Order';
-// import Setting from '../page/admin/Setting';
-// import Profile from '../page/admin/Profile';
-
-// export const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Root />,
-//     children: [
-//       {
-//         index: true,
-//         element: <Home />
-//       },
-//       {
-//         path: '/shop',
-//         element: <Shop />
-//       },
-//       {
-//         path: '/admin-dashboard',
-//         element: <AdminLayout />,
-//         children: [
-//           {
-//             index: true,
-//             element: <Dashboard />
-//           },
-//           {
-//             path: 'users',
-//             element: <Users />
-//           },
-//           {
-//             path: 'products',
-//             element: <Products />
-//           },
-//           {
-//             path: 'order',
-//             element: <Order />
-//           },
-//           {
-//             path: 'setting',
-//             element: <Setting />
-//           },
-//           {
-//             path: 'profile',
-//             element: <Profile />
-//           },
-//         ]
-//       },
-
-//     ]
-//   },
-//   {
-//     path: "*",
-//     element: <NotFound />
-//   },
-
-// ]);

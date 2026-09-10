@@ -635,6 +635,74 @@ const NNN = () => {
           </div>
         </Link>
       </div>
+      {/* final logo vai eta  */}
+      {/*  */}
+      <div className="flex-shrink-0 ">
+        <Link
+          to="/"
+          className="flex items-center gap-3 group focus:outline-none"
+        >
+          {/* Creative Geometric Diamond Badge */}
+          <div className="relative flex items-center justify-center ">
+            {/* Background Subtle Glow on Hover */}
+            <div className="absolute inset-0 rotate-45 bg-[#C5A059]/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Diamond Shape Box */}
+            <div
+              className="relative w-10 h-10 rotate-45 border-2 border-[#C5A059] 
+                        bg-slate-100/80 dark:bg-neutral-900/80 backdrop-blur-sm
+                        group-hover:border-neutral-900 dark:group-hover:border-white 
+                        shadow-sm group-hover:shadow-lg group-hover:shadow-[#C5A059]/20 
+                        transition-all duration-500 rounded-lg flex items-center justify-center"
+            >
+              {/* Inner GZ Text */}
+              <span
+                className="-rotate-45 font-black text-base text-[#C5A059] 
+                    dark:text-[#E6C687] group-hover:scale-110 transition-all duration-300 select-none"
+              >
+                GZ
+              </span>
+            </div>
+          </div>
+
+          {/* Brand Identity Typography */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5 leading-none">
+              {/* High-Contrast Dynamic Title */}
+              <span
+                className="font-black text-xl tracking-wide 
+                    text-neutral-900 dark:text-neutral-100 
+                    group-hover:text-[#C5A059] dark:group-hover:text-[#E6C687] 
+                    transition-colors duration-300 drop-shadow-xs"
+              >
+                GEN
+                <span className="text-[#C5A059] group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
+                  -
+                </span>
+                Z
+              </span>
+
+              {/* Eye-Catching Rotating Diamond Accent */}
+              <span className="w-2 h-2 rotate-45 bg-[#C5A059] shadow-md transition-all duration-500 group-hover:scale-125 group-hover:rotate-[225deg]" />
+            </div>
+
+            {/* EXPORT Subtitle */}
+            <div className="flex items-center ml-0.5">
+              <span
+                className="text-[9px] font-extrabold tracking-[0.35em] uppercase 
+                    text-neutral-700 dark:text-[#C5A059] 
+                    group-hover:text-neutral-950 dark:group-hover:text-white 
+                    transition-colors duration-300"
+              >
+                EXPORT
+              </span>
+
+              {/* Expanding Decorative Glow Line */}
+              <span className="h-[2px] w-3 bg-[#C5A059] opacity-80 group-hover:w-5 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
+            </div>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };

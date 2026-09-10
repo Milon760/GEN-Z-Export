@@ -15,6 +15,9 @@ const Products = () => {
   // 🌟 useContext থেকে গ্লোবাল স্টেট ও মেথডগুলো নিয়ে আসা
   const { allProduct, isLoading, fetchProducts, updateProduct, deleteProduct } =
     useAdmin();
+
+  console.log("aall products", allProduct);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   // 📝 প্রোডাক্ট এডিট মোডের জন্য আলাদা লোকাল স্টেট

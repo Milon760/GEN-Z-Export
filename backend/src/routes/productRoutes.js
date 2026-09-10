@@ -8,6 +8,8 @@ const {
   orderProducts,
 
   getMyOrders,
+
+  createSubscribe,
 } = require("../controllers/ProductControllers");
 
 const { protect } = require("../middlewares/authMiddleware");
@@ -17,15 +19,18 @@ const route = express.Router();
 // get all product
 route.get("/", getProducts);
 
-route.get("/products/:id", getProductById);
-
 //  add to cart handler
-route.post("/products/cart/add", addProductToCart);
+route.post("/cart/add", addProductToCart);
 
 // order handler
-route.post("/products/order/place", orderProducts);
+route.post("/order/place", orderProducts);
 
 // my orders handler
-route.get("/products/my-orders", protect, getMyOrders);
+route.get("/my-orders", protect, getMyOrders);
+
+// subscribe
+route.post("/subscribe", createSubscribe);
+
+route.get("/:id", getProductById);
 
 module.exports = route;

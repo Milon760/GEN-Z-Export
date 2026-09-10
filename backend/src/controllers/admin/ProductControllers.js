@@ -1,15 +1,14 @@
 const createError = require("http-errors");
-const { successResponse } = require("./responseController");
-const { findWithId } = require("../services/findWithId");
-const { deleteImage } = require("../helper/deleteImage");
-const Products = require("../modle/productModle");
-const Cart = require("../modle/cart");
-const Order = require("../modle/order");
-const Subscribe = require("../modle/subscribe");
-const cloudinary = require("../config/cloudinary");
+const { successResponse } = require("../responseController");
+// const { findWithId } = require("../services/findWithId");
+// const { deleteImage } = require("../helper/deleteImage");
+const Products = require("../../modle/productModle");
+const Cart = require("../../modle/cart");
+const Order = require("../../modle/order");
+const cloudinary = require("../../config/cloudinary");
 
 // get all product
-const getProducts = async (req, res, next) => {
+const getAllProduct = async (req, res, next) => {
   try {
     const search = req.query.search || "";
 
@@ -99,7 +98,7 @@ const createProducts = async (req, res, next) => {
       stock,
       rating,
       description,
-      image,
+      // req.body থেকে image রিসিভ করার দরকার নেই, কারণ এটি req.file থেকে আসবে
     } = req.body || {};
 
     console.log(
@@ -114,10 +113,10 @@ const createProducts = async (req, res, next) => {
       stock,
       rating,
       description,
-      image,
+      req.file, // এখানে req.file চেক করুন
     );
 
-    // ১. সব ডাটা ঠিকঠাক আছে কিনা যাচাই (৪০০ ব্যাড রিকোয়েস্ট)
+    // ১. সব ডাটা ঠিকঠাক আছে কিনা যাচাই (৪০০ ব্যাড রিকোয়েস্ট)
     if (
       !id ||
       !name ||
@@ -136,7 +135,7 @@ const createProducts = async (req, res, next) => {
       });
     }
 
-    // ২. ইমেজ ফাইল পাঠানো হয়েছে কিনা যাচাই করা
+    // ২. ইমেজ ফাইল পাঠানো হয়েছে কিনা যাচাই করা
     if (!req.file) {
       return res
         .status(400)
@@ -149,9 +148,9 @@ const createProducts = async (req, res, next) => {
     const uploadResponse = await cloudinary.uploader.upload(fileUrl, {
       folder: "products",
     });
-    const image_url = uploadResponse.secure_url;
+    const image_url = uploadResponse.secure_url; // এটি হলো ক্লাউডিনারির পার্মানেন্ট ইমেজ লিংক
 
-    // ৪. নতুন প্রোডাক্ট তৈরি ও সেভ করা
+    // ৪. নতুন প্রোডাক্ট তৈরি ও সেভ করা (এখানে image_url দিতে হবে)
     const newProduct = new Products({
       id,
       name,
@@ -163,7 +162,7 @@ const createProducts = async (req, res, next) => {
       stock,
       rating,
       description,
-      image,
+      image: image_url, // 👈 ঠিক এই জায়গাটি পরিবর্তন করা হয়েছে
     });
     const product = await newProduct.save();
 
@@ -246,95 +245,7 @@ const updateProducts = async (req, res, next) => {
   }
 };
 
-// cart
-const addProductToCart = async (req, res, next) => {
-  try {
-    const { userId, productId, price, quantity } = req.body;
-
-    const product = await Products.findById(productId);
-
-    if (!product) throw createError(401, "Product not found");
-
-    const actualPrice = product.price;
-    const qty = Number(quantity);
-
-    let cart = await Cart.findOne({ userId });
-
-    if (cart) {
-      const productIndex = cart.products.findIndex(
-        (p) => p.productId.toString() === productId,
-      );
-      if (productIndex > -1) {
-        cart.products[productIndex].quantity += qty;
-      } else {
-        cart.products.push({ productId, quantity: qty, price: actualPrice });
-      }
-
-      cart.totalPrice += actualPrice * qty;
-      await cart.save();
-
-      return successResponse(res, {
-        status: 200,
-        message: "Cart updated sucessfully",
-      });
-    } else {
-      const newCart = await Cart.create({
-        userId,
-        products: [{ productId, price: actualPrice, quantity: qty }],
-        totalPrice: actualPrice * qty,
-      });
-      successResponse(res, {
-        status: 201,
-        message: "Cart Created sucessfully",
-        payload: { newCart },
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
-
-// order confrim
-const orderProducts = async (req, res, next) => {
-  try {
-    const { userId, paymentMethod, shippingAddress } = req.body || {};
-    if (!userId || !paymentMethod || !shippingAddress) {
-      throw createError(400, "not empty value accepted");
-    }
-
-    let cart = await Cart.findOne({ userId });
-
-    if (!cart || cart.products.length === 0) {
-      throw createError(400, "Cart not found");
-    }
-
-    const newOrder = new Order({
-      userId,
-      products: cart.products,
-      totalPrice: cart.totalPrice,
-      paymentMethod,
-      shippingAddress,
-    });
-
-    await newOrder.save();
-
-    const deletedCart = await Cart.findOneAndDelete({ userId });
-    if (deletedCart) {
-      console.log("cart was deleted");
-    }
-    console.log("cart no detele");
-
-    successResponse(res, {
-      status: 201,
-      message: "Order Requiest sucessfully",
-      payload: { newOrder },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// get order
+// get all order admin
 const getOrderHistory = async (req, res, next) => {
   try {
     const orderHistory = await Order.find();
@@ -353,68 +264,11 @@ const getOrderHistory = async (req, res, next) => {
   }
 };
 
-// get my orders
-const getMyOrders = async (req, res, next) => {
-  try {
-    const userId = req.body;
-    const id = req.user.userId;
-
-    console.log("use", id);
-
-    const userOrders = await Order.find({ userId: id }).sort({ createAt: -1 });
-
-    if (!userOrders || userOrders.length === 0) {
-      throw createError(400, "Order not found ");
-    }
-
-    successResponse(res, {
-      status: 200,
-      message: "Order reatruned sucessfully",
-      payload: { userOrders },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Subscribe
-const createSubscribe = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      throw createError(401, "Email not found ");
-    }
-
-    const subscribed = await Subscribe.findOne({ email });
-    console.log(email);
-
-    if (subscribed) {
-      throw createError(401, "with this alredy Subscribed");
-    }
-
-    await Subscribe.create({ email });
-
-    successResponse(res, {
-      status: 201,
-      message: "Subscribed sucessfully",
-    });
-  } catch (error) {
-    console.log(error.message);
-    throw createError(401, error.message);
-    next(error);
-  }
-};
-
 module.exports = {
-  getProducts,
+  getAllProduct,
   createProducts,
   deleteProducts,
   getProductById,
   updateProducts,
-  addProductToCart,
-  orderProducts,
   getOrderHistory,
-  getMyOrders,
-
-  createSubscribe,
 };

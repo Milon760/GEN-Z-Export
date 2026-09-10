@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   FiSearch,
@@ -8,20 +8,25 @@ import {
   FiX,
   FiShoppingBag,
   FiChevronRight,
+  FiLogOut,
+  FiShield,
+  FiLayout,
+  FiChevronDown,
 } from "react-icons/fi";
-import { ThemeContext } from "../context/ThemeContext";
+import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import { IoIosMoon, IoIosSunny } from "react-icons/io";
-import { BiBot } from "react-icons/bi";
 
 export default function Navbar1({
   cartCount = 0,
   wishlistCount = 2,
   onCartOpen = () => {},
 }) {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  console.log(user);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -55,6 +60,24 @@ export default function Navbar1({
     }
   };
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    setIsMenuOpen(false);
+    console.log("click");
+  };
+
   return (
     <header className="w-full fixed top-0 left-0 z-500 font-sans select-none antialiased">
       {/* মেইন নেভিগেশন বার */}
@@ -71,7 +94,7 @@ export default function Navbar1({
             <div className="flex-shrink-0 ">
               <Link
                 to="/"
-                className="flex items-center gap-3 group focus:outline-none"
+                className="flex items-center gap-2 sm:gap-3 group focus:outline-none"
               >
                 {/* Creative Geometric Diamond Badge */}
                 <div className="relative flex items-center justify-center ">
@@ -80,7 +103,7 @@ export default function Navbar1({
 
                   {/* Diamond Shape Box */}
                   <div
-                    className="relative w-10 h-10 rotate-45 border-2 border-[#C5A059] 
+                    className="relative w-7 sm:w-9 h-7 sm:h-9 rotate-45 border-2 border-[#C5A059] 
                         bg-slate-100/80 dark:bg-neutral-900/80 backdrop-blur-sm
                         group-hover:border-neutral-900 dark:group-hover:border-white 
                         shadow-sm group-hover:shadow-lg group-hover:shadow-[#C5A059]/20 
@@ -88,7 +111,7 @@ export default function Navbar1({
                   >
                     {/* Inner GZ Text */}
                     <span
-                      className="-rotate-45 font-black text-base text-[#C5A059] 
+                      className="-rotate-45 text-sm sm:text-[17px] font-black text-base text-[#C5A059] 
                     dark:text-[#E6C687] group-hover:scale-110 transition-all duration-300 select-none"
                     >
                       GZ
@@ -101,7 +124,7 @@ export default function Navbar1({
                   <div className="flex items-center gap-1.5 leading-none">
                     {/* High-Contrast Dynamic Title */}
                     <span
-                      className="font-black text-xl tracking-wide 
+                      className="font-black text-sm sm:text-lg tracking-wide 
                     text-neutral-900 dark:text-neutral-100 
                     group-hover:text-[#C5A059] dark:group-hover:text-[#E6C687] 
                     transition-colors duration-300 drop-shadow-xs"
@@ -120,8 +143,8 @@ export default function Navbar1({
                   {/* EXPORT Subtitle */}
                   <div className="flex items-center ml-0.5">
                     <span
-                      className="text-[9px] font-extrabold tracking-[0.35em] uppercase 
-                    text-neutral-700 dark:text-[#C5A059] 
+                      className="text-[7px] sm:text-[9px] font-extrabold tracking-[0.35em] uppercase 
+                    text-[#C5A059] 
                     group-hover:text-neutral-950 dark:group-hover:text-white 
                     transition-colors duration-300"
                     >
@@ -129,7 +152,7 @@ export default function Navbar1({
                     </span>
 
                     {/* Expanding Decorative Glow Line */}
-                    <span className="h-[2px] w-3 bg-[#C5A059] opacity-80 group-hover:w-5 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
+                    <span className="h-[2px] w-2 bg-[#C5A059] opacity-80 group-hover:w-4 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
                   </div>
                 </div>
               </Link>
@@ -164,12 +187,12 @@ export default function Navbar1({
               {/* থিম টগল বাটন */}
               <button
                 onClick={toggleTheme}
-                className={`relative w-14 h-7 rounded-full p-1 transition-all duration-500 border border-slate-200 dark:border-slate-700 shadow-inner focus:outline-none 
+                className={`relative w-12 sm:w-14 h-6 sm:h-7 rounded-full p-1 transition-all duration-500 border border-slate-200 dark:border-slate-700 shadow-inner focus:outline-none 
                                ${theme === "dark" ? "bg-slate-800" : "bg-slate-100"}`}
               >
                 <div
-                  className={`w-5 h-5 rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center
-                               ${theme === "dark" ? "translate-x-7 bg-indigo-600" : "translate-x-0 bg-white"}`}
+                  className={`w-4 sm:w-5 h-4 sm:h-5 rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center
+                               ${theme === "dark" ? "translate-x-6 sm:translate-x-7 bg-indigo-600" : "translate-x-0 bg-white"}`}
                 >
                   {theme === "dark" ? (
                     <IoIosMoon className="w-3 h-3 text-white" />
@@ -220,39 +243,112 @@ export default function Navbar1({
               </Link>
 
               {/* অথেন্টিকেশন বাটন (Desktop Only) */}
-              <div className="hidden lg:flex items-center gap-2 ml-2">
+              <div
+                className="hidden lg:flex items-center gap-2 ml-2"
+                ref={menuRef}
+              >
                 {user ? (
-                  <>
-                    <Link
-                      to="/dashboard"
-                      className="relative flex gap-1 p-2.5 rounded-xl transition-all duration-300 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                  <div className="relative">
+                    {/* প্রোফাইল আইকন ও টগল বাটন */}
+                    <button
+                      type="button"
+                      onClick={() => setIsMenuOpen((prev) => !prev)}
+                      className="flex items-center gap-2 p-1.5 rounded-xl transition-all duration-300 hover:bg-neutral-100 dark:hover:bg-neutral-800/60 focus:outline-none border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700/80 group cursor-pointer"
                     >
-                      <div className="w-10 h-10 rounded-[50%] overflow-hidden transition-all duration-200 hover:scale-105">
-                        <img src="profile.jpg" alt="profile" />
+                      <div className="relative w-9 h-9">
+                        {user?.photoURL ? (
+                          <img
+                            src={user.photoURL}
+                            alt={user?.displayName || "Profile"}
+                            className="w-full h-full rounded-full object-cover border-2 border-[#C5A059] group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full rounded-full bg-[#C5A059] text-neutral-950 font-black text-sm flex items-center justify-center border-2 border-[#C5A059]">
+                            {(user?.displayName || user?.email || "U")
+                              .charAt(0)
+                              .toUpperCase()}
+                          </div>
+                        )}
+                        {/* অনলাইন স্ট্যাটাস ইন্ডিকেটর */}
+                        <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-neutral-950"></span>
                       </div>
-                      <div className="bg-green-600 w-2.5 h-2.5 rounded-[50%] absolute right-2.5 bottom-2.5"></div>
-                    </Link>
-                    {user.isAdmin && (
-                      <Link
-                        to="/admin-dashboard"
-                        className="group flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-400 bg-transparent text-xs font-semibold uppercase tracking-wider text-black dark:text-slate-200 transition-all duration-300 hover:bg-amber-400/10 hover:border-amber-600 dark:hover:bg-amber-400/10 dark:hover:text-amber-400 dark:hover:border-amber-400/40"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                        Admin
-                      </Link>
+
+                      <FiChevronDown
+                        className={`text-neutral-500 dark:text-neutral-400 group-hover:text-[#C5A059] transition-transform duration-300 ${
+                          isMenuOpen ? "rotate-180 text-[#C5A059]" : ""
+                        }`}
+                        size={16}
+                      />
+                    </button>
+
+                    {/* ================= ড্রপডাউন মেনু ================= */}
+                    {isMenuOpen && (
+                      <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-2xl py-2 z-50 text-left animate-in fade-in slide-in-from-top-2 duration-200">
+                        {/* ইউজার ইনফো হেডার */}
+                        <div className="px-4 py-3 border-b border-neutral-100 dark:border-neutral-800/80">
+                          <p className="text-xs font-black text-neutral-900 dark:text-white truncate">
+                            {user?.displayName || "User Account"}
+                          </p>
+                          <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 truncate">
+                            {user?.email}
+                          </p>
+                          {user?.role === "admin" && (
+                            <span className="inline-block mt-1.5 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-widest bg-[#C5A059]/15 text-[#C5A059] rounded-md border border-[#C5A059]/30">
+                              Administrator
+                            </span>
+                          )}
+                        </div>
+
+                        {/* মেনু লিংক্স */}
+                        <div className="p-1 space-y-0.5">
+                          {/* অ্যাডমিন প্যানেল লিংক (যদি রোল admin হয়) */}
+                          {user?.role === "admin" && (
+                            <Link
+                              to="/admin-dashboard"
+                              onClick={() => setIsMenuOpen(false)}
+                              className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-700 dark:text-neutral-200 hover:bg-[#C5A059]/10 hover:text-[#C5A059] dark:hover:bg-[#C5A059]/10 dark:hover:text-[#C5A059] transition-all"
+                            >
+                              <FiShield size={15} className="text-[#C5A059]" />
+                              <span>Admin Panel</span>
+                            </Link>
+                          )}
+
+                          {/* ড্যাশবোর্ড লিংক */}
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800/80 hover:text-[#C5A059] dark:hover:text-[#C5A059] transition-all"
+                          >
+                            <FiLayout size={15} />
+                            <span>Dashboard</span>
+                          </Link>
+                        </div>
+
+                        {/* লগআউট বাটন */}
+                        <div className="p-1 border-t border-neutral-100 dark:border-neutral-800/80 mt-1">
+                          <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all cursor-pointer"
+                          >
+                            <FiLogOut size={15} />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
                     )}
-                  </>
+                  </div>
                 ) : (
                   <>
                     <Link
                       to="/login"
-                      className="text-xs font-bold uppercase tracking-wider px-3 py-2 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 rounded-xl hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-all duration-300"
+                      className="text-xs font-bold uppercase tracking-wider px-3.5 py-2 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-700 rounded-xl hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-neutral-900 transition-all duration-300"
                     >
                       Sign In
                     </Link>
                     <Link
                       to="/register"
-                      className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl transition-all duration-300 bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-[#C5A059] dark:text-neutral-950 dark:hover:bg-[#C5A059]/90 shadow-sm"
+                      className="text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl transition-all duration-300 bg-[#C5A059] text-neutral-950 hover:bg-[#b08e4c] font-black shadow-sm"
                     >
                       Sign Up
                     </Link>
@@ -308,7 +404,7 @@ export default function Navbar1({
 
       {/* মোবাইল ড্রয়ার মেনু */}
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] transition-opacity duration-300 ${
+        className={`sm:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] transition-opacity duration-300 ${
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -360,36 +456,102 @@ export default function Navbar1({
           </div>
 
           {/* মোবাইল ফুটার অ্যাকশন বাটন */}
-          <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-3">
+          <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
             {user ? (
-              <div className="flex gap-2">
-                <Link
-                  to="/dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex-grow py-3 bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white rounded-xl font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
+              <div className="space-y-3">
+                {/* মোবাইল ইউজার ইনফো কার্ড */}
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900/80 border border-neutral-200/80 dark:border-neutral-800">
+                  <div className="relative w-10 h-10 flex-shrink-0">
+                    {user?.photoURL ? (
+                      <img
+                        src={user.photoURL}
+                        alt={user?.displayName || "User Profile"}
+                        className="w-full h-full rounded-full object-cover border-2 border-[#C5A059]"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-[#C5A059] text-neutral-950 font-black text-sm flex items-center justify-center border-2 border-[#C5A059]">
+                        {(user?.displayName || user?.email || "U")
+                          .charAt(0)
+                          .toUpperCase()}
+                      </div>
+                    )}
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-neutral-900"></span>
+                  </div>
+
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-xs font-black text-neutral-900 dark:text-white truncate">
+                      {user?.displayName || "User Account"}
+                    </p>
+                    <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400 truncate">
+                      {user?.email}
+                    </p>
+                  </div>
+
+                  {user?.role === "admin" && (
+                    <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-widest bg-[#C5A059]/15 text-[#C5A059] rounded-md border border-[#C5A059]/30">
+                      Admin
+                    </span>
+                  )}
+                </div>
+
+                {/* মোবাইল নেভিগেশন বাটন গ্রিড */}
+                <div
+                  className={`grid ${user?.role === "admin" ? "grid-cols-1" : "grid-cols-2"} gap-2`}
                 >
-                  <FiUser size={16} className="text-[#C5A059]" /> Dashboard
-                </Link>
+                  {user?.role === "admin" && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full py-2.5 px-3 bg-[#C5A059]/10 text-[#C5A059] border border-[#C5A059]/30 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-[#C5A059]/20 transition-all active:scale-[0.98]"
+                    >
+                      <FiShield size={15} />
+                      <span>Admin Panel</span>
+                    </Link>
+                  )}
+
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="py-2.5 px-3 bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-950 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-[0.98]"
+                  >
+                    <FiUser size={15} className="text-[#C5A059]" />
+                    <span>Dashboard</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      if (handleLogout) handleLogout();
+                    }}
+                    className="py-2.5 px-3 border border-rose-500/20 text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 rounded-xl font-bold text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    <FiLogOut size={15} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
               </div>
             ) : (
+              /* লগইন না থাকা অবস্থায় বাটন */
               <div className="grid grid-cols-2 gap-2">
                 <Link
                   to="/login"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="py-3 border border-neutral-300 dark:border-neutral-700 text-center text-neutral-700 dark:text-neutral-300 font-bold text-xs tracking-widest uppercase rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all"
+                  className="py-3 border border-neutral-300 dark:border-neutral-700 text-center text-neutral-800 dark:text-neutral-200 font-bold text-xs tracking-widest uppercase rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 active:scale-[0.98] transition-all"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="py-3 bg-neutral-950 text-white dark:bg-[#C5A059] dark:text-neutral-950 text-center font-bold text-xs tracking-widest uppercase rounded-xl hover:bg-neutral-900 dark:hover:bg-[#C5A059]/90 transition-all"
+                  className="py-3 bg-[#C5A059] text-neutral-950 text-center font-black text-xs tracking-widest uppercase rounded-xl hover:bg-[#b08e4c] active:scale-[0.98] shadow-sm transition-all"
                 >
                   Sign Up
                 </Link>
               </div>
             )}
           </div>
+          {/*  */}
         </div>
       </div>
     </header>

@@ -16,6 +16,8 @@ export const AdminProvider = ({ children }) => {
 
   console.log(userPagination.totalUser);
 
+  // ------------------- user call function -----------
+
   // 👥 ১. ইউজার ডাটা fetch করার ফাংশন
   const fetchUsers = async (page = 1) => {
     setIsLoading(true);
@@ -113,6 +115,10 @@ export const AdminProvider = ({ children }) => {
     }
   };
 
+  // ------------------- user call function -----------
+
+  // ------------------- products call function -----------
+
   // 📦 ৫. প্রোডাক্ট ও অর্ডার ফেচ
   const fetchProducts = async (query = "") => {
     setIsLoading(true);
@@ -120,6 +126,8 @@ export const AdminProvider = ({ children }) => {
       const response = await API.get(
         `/admin/products?search=${query}&limit=20`,
       );
+      console.log("responce products", response);
+
       if (response.data.success) {
         setAllProduct(response.data.payload.products || []);
       }
@@ -159,14 +167,20 @@ export const AdminProvider = ({ children }) => {
 
   const createProduct = async (productData) => {
     try {
-      const res = await API.post("/admin/products", productData);
+      const res = await API.post("/admin/products/create", productData);
 
-      console.log(res, "res");
+      console.log(res, "res create");
       return res.data;
     } catch (error) {
       console.log(error);
     }
   };
+
+  // ------------------- products call function -----------
+
+  // ------------------- banner call function -----------
+
+  // ------------------- banner call function -----------
 
   const fetchOrders = async () => {
     try {

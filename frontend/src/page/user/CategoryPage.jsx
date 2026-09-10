@@ -1,19 +1,11 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ProductContext } from "../../context/ProductContext";
-import {
-  FiSearch,
-  FiSliders,
-  FiEye,
-  FiShoppingCart,
-  FiChevronDown,
-  FiX,
-  FiGrid,
-} from "react-icons/fi"; // আপনার icons ইম্পোর্ট ঠিক রাখুন
-import { FiSearch as FiSearchIcon } from "react-icons/fi";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useProducts } from "../../context/ProductContext";
+import { FiSearch, FiChevronDown, FiX } from "react-icons/fi"; // আপনার icons ইম্পোর্ট ঠিক রাখুন
+
 import ProductCard from "./ProductCart";
 import CategoryHeader from "../../components/CategoryBanner";
+import CustomerChat from "../../components/CustomerChatbot";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -22,6 +14,8 @@ const CategoryPage = () => {
   const [localSearch, setLocalSearch] = useState("");
   const [sortBy, setSortBy] = useState("default");
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     allProduct = [],
     cart = [],
@@ -29,7 +23,7 @@ const CategoryPage = () => {
     favorites = [],
     addToFavorites,
     removeFromFavorites,
-  } = useContext(ProductContext);
+  } = useProducts();
 
   // ১. URL ক্যাটাগরি অনুযায়ী ফিল্টারিং
   // ১. URL ক্যাটাগরি অনুযায়ী নিখুঁত ফিল্টারিং
@@ -176,6 +170,26 @@ const CategoryPage = () => {
           </div>
         )}
       </div>
+
+      {/* Floating AI Button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center space-x-2 sm:space-x-2.5 bg-gradient-to-r from-[#C5A059] via-[#D4AF37] to-[#B38F48] hover:from-[#B38F48] hover:via-[#C5A059] hover:to-[#A37E37] text-neutral-950 px-2 sm:px-4 py-1 sm:py-2 rounded-full shadow-[0_10px_25px_-5px_rgba(197,160,89,0.4)] transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-4 focus:ring-[#C5A059]/40 font-bold group cursor-pointer border border-[#FFE29A]/30"
+      >
+        <div className="relative flex items-center justify-center">
+          {/* গোল্ডেন পিং প্যাকগ্রাউন্ড অ্যানিমেশন */}
+          <span className="absolute inline-flex h-4 sm:h-5 w-4 sm:w-5 rounded-full bg-[#FFE29A] opacity-75 animate-ping group-hover:opacity-100"></span>
+          <span className="relative text-base transform group-hover:rotate-6 transition-transform duration-300">
+            ✨
+          </span>
+        </div>
+        <span className="text-sm font-semibold tracking-wide uppercase">
+          Ask AI
+        </span>
+      </button>
+
+      {/* AI Chat Modal */}
+      <CustomerChat isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </div>
   );
 };

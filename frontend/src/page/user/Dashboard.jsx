@@ -19,10 +19,16 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 import GlobalLoader from "../../components/GlobalLoader";
 import ProfileUpdate from "./ProfileUpdate";
+import { useTheme } from "../../context/ThemeContext";
+import { IoIosMoon, IoIosSunny, IoMdNotifications } from "react-icons/io";
 
 const Dashboard = () => {
   const { user, myOrder, isLoading, loading, setSuccessMsg, userLogout } =
     useAuth();
+
+  const { theme, toggleTheme } = useTheme();
+
+  console.log("user data", user);
 
   // Settings Popup Modal State
   const [isSetting, setIsSetting] = useState(false);
@@ -68,9 +74,117 @@ const Dashboard = () => {
     }
   };
 
+  console.log(user?.notifications, "nnn");
+
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 pt-32 pb-12 select-none relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 font-sans antialiased transition-colors duration-500 select-none relative">
+      <nav className=" sticky top-0 z-50 bg-white dark:bg-neutral-950 flex justify-between items-center px-4 py-3">
+        {/* logo */}
+        <div className="flex-shrink-0 ">
+          <Link
+            to="/"
+            className="flex items-center gap-2 sm:gap-3 group focus:outline-none"
+          >
+            {/* Creative Geometric Diamond Badge */}
+            <div className="relative flex items-center justify-center ">
+              {/* Background Subtle Glow on Hover */}
+              <div className="absolute inset-0 rotate-45 bg-[#C5A059]/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              {/* Diamond Shape Box */}
+              <div
+                className="relative w-7 sm:w-9 h-7 sm:h-9 rotate-45 border-2 border-[#C5A059] 
+                        bg-slate-100/80 dark:bg-neutral-900/80 backdrop-blur-sm
+                        group-hover:border-neutral-900 dark:group-hover:border-white 
+                        shadow-sm group-hover:shadow-lg group-hover:shadow-[#C5A059]/20 
+                        transition-all duration-500 rounded-lg flex items-center justify-center"
+              >
+                {/* Inner GZ Text */}
+                <span
+                  className="-rotate-45 text-sm sm:text-[17px] font-black text-base text-[#C5A059] 
+                    dark:text-[#E6C687] group-hover:scale-110 transition-all duration-300 select-none"
+                >
+                  GZ
+                </span>
+              </div>
+            </div>
+
+            {/* Brand Identity Typography */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5 leading-none">
+                {/* High-Contrast Dynamic Title */}
+                <span
+                  className="font-black text-sm sm:text-lg tracking-wide 
+                    text-neutral-900 dark:text-neutral-100 
+                    group-hover:text-[#C5A059] dark:group-hover:text-[#E6C687] 
+                    transition-colors duration-300 drop-shadow-xs"
+                >
+                  GEN
+                  <span className="text-[#C5A059] group-hover:text-neutral-900 dark:group-hover:text-white transition-colors">
+                    -
+                  </span>
+                  Z
+                </span>
+
+                {/* Eye-Catching Rotating Diamond Accent */}
+                <span className="w-2 h-2 rotate-45 bg-[#C5A059] shadow-md transition-all duration-500 group-hover:scale-125 group-hover:rotate-[225deg]" />
+              </div>
+
+              {/* EXPORT Subtitle */}
+              <div className="flex items-center ml-0.5">
+                <span
+                  className="text-[7px] sm:text-[9px] font-extrabold tracking-[0.35em] uppercase 
+                    text-[#C5A059] 
+                    group-hover:text-neutral-950 dark:group-hover:text-white 
+                    transition-colors duration-300"
+                >
+                  EXPORT
+                </span>
+
+                {/* Expanding Decorative Glow Line */}
+                <span className="h-[2px] w-2 bg-[#C5A059] opacity-80 group-hover:w-4 transition-all duration-300 shadow-[0_0_6px_#C5A059]" />
+              </div>
+            </div>
+          </Link>
+        </div>
+        <ul className="flex items-center gap-2">
+          <li>
+            <Link to={"/"}>All Drops</Link>
+          </li>
+          <li>
+            <Link to={"/shop"}>Shop</Link>
+          </li>
+          <li>
+            {/* থিম টগল বাটন */}
+            <button
+              onClick={toggleTheme}
+              className={`relative w-12 sm:w-14 h-6 sm:h-7 rounded-full p-1 transition-all duration-500 border border-slate-200 dark:border-slate-700 shadow-inner focus:outline-none 
+                                          ${theme === "dark" ? "bg-slate-800" : "bg-slate-100"}`}
+            >
+              <div
+                className={`w-4 sm:w-5 h-4 sm:h-5 rounded-full shadow-md transform transition-transform duration-500 flex items-center justify-center
+                                          ${theme === "dark" ? "translate-x-6 sm:translate-x-7 bg-indigo-600" : "translate-x-0 bg-white"}`}
+              >
+                {theme === "dark" ? (
+                  <IoIosMoon className="w-3 h-3 text-white" />
+                ) : (
+                  <IoIosSunny className="w-3 h-3 text-yellow-500" />
+                )}
+              </div>
+            </button>
+          </li>
+          {/* 🔔 নোটিফিকেশন ব্যাজ */}
+          <li>
+            <button className="relative p-2 rounded-xl text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800/60 transition-colors duration-200 focus:outline-none">
+              <IoMdNotifications size={24} />
+              <span className="absolute w-4 h-4 flex items-center justify-center rounded-full right-1 top-1 text-[10px] font-bold text-white bg-rose-600 shadow-sm ring-2 ring-white dark:ring-zinc-900">
+                {user?.notifications.length}
+              </span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 mt-5">
         {/* ================= HEADER HERO BANNER ================= */}
         <div className="relative rounded-[2rem] bg-neutral-900 border border-neutral-800 p-6 sm:p-10 overflow-hidden shadow-xl">
           <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#C5A059]/10 rounded-full blur-[100px] pointer-events-none" />
@@ -91,7 +205,7 @@ const Dashboard = () => {
                     {user?.name}
                   </h1>
 
-                  {user?.isAdmin && (
+                  {user?.role === "admin" && (
                     <Link
                       to={"/admin-dashboard"}
                       className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md border border-[#C5A059]/40 bg-[#C5A059]/10 text-[#C5A059] text-[12px] font-black tracking-widest uppercase"
@@ -112,6 +226,12 @@ const Dashboard = () => {
                   Identity Node ID:{" "}
                   <span className="font-mono text-[11px] text-neutral-500">
                     {user?._id}
+                  </span>
+                </p>
+                <p className="text-xs text-neutral-400 font-medium tracking-wide">
+                  Join Date:{" "}
+                  <span className="font-mono text-[11px] text-neutral-500">
+                    {user?.createdAt}
                   </span>
                 </p>
               </div>
@@ -145,7 +265,7 @@ const Dashboard = () => {
                 Total Pipeline Investments
               </span>
               <span className="text-xl font-black text-[#C5A059]">
-                {totalSpent.toLocaleString()} BDT
+                {user?.totalSpent.toLocaleString()} BDT
               </span>
             </div>
             <div className="w-12 h-12 rounded-xl bg-[#C5A059]/10 text-[#C5A059] flex items-center justify-center">
@@ -159,7 +279,7 @@ const Dashboard = () => {
                 Active Transmissions
               </span>
               <span className="text-xl font-black text-amber-500">
-                {processingOrders} Orders
+                {user?.totalOrders} Orders
               </span>
             </div>
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">

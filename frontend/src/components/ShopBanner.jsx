@@ -2,7 +2,7 @@ import React from "react";
 
 const ShopBanner = () => {
   return (
-    <div className="relative w-full min-h-[280px] sm:min-h-[340px] md:min-h-[380px] lg:min-h-[420px] flex items-center bg-zinc-950 overflow-hidden rounded-3xl shadow-2xl border border-zinc-800/50">
+    <div className="relative w-full min-h-[280px] sm:min-h-[340px] md:min-h-[380px] lg:min-h-[420px] flex items-center bg-zinc-950 overflow-hidden  shadow-2xl border border-zinc-800/50">
       {/* 🖼️ ১. ব্যাকগ্রাউন্ড ইমেজ লেয়ার (স্মুথ পজিশনিং ও রেসপন্সিভ ফিট) */}
       <div className="absolute inset-0 w-full h-full">
         {/* ডার্ক গ্রেডিয়েন্ট ওভারলে - যা টেক্সটকে প্রিমিয়াম ও স্পষ্ট দেখায় */}

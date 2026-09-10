@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaArrowLeft,
@@ -14,10 +14,10 @@ import {
   FaCopy,
   FaClipboardCheck,
 } from "react-icons/fa";
-import { ProductContext } from "../../context/ProductContext";
+import { useProducts } from "../../context/ProductContext";
 
 const Checkout = () => {
-  const { cart } = useContext(ProductContext);
+  const { cart } = useProducts();
   // ২. স্টেট ম্যানেজমেন্ট
   const [formData, setFormData] = useState({
     name: "",

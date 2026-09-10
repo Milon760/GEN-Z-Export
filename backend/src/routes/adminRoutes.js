@@ -6,16 +6,19 @@ const {
   addUsers,
   userUpdateWithId,
   userDeleteWithId,
-} = require("../controllers/adminControllers");
+
+  // products
+} = require("../controllers/admin/adminControllers");
 
 const {
+  getAllProduct,
   createProducts,
   deleteProducts,
 
   updateProducts,
 
   getOrderHistory,
-} = require("../controllers/ProductControllers");
+} = require("../controllers/admin/ProductControllers");
 
 const {
   protect,
@@ -49,8 +52,11 @@ route.delete("/users/:id", protect, userDeleteWithId);
 
 ///----------------------- products router start ----------------
 
+// get all products
+route.get("/products", getAllProduct);
+
 // create product
-route.post("/products", upload.single("image"), createProducts);
+route.post("/products/create", upload.single("image"), createProducts);
 
 // get all order access only admin
 route.get("/products/orders", getOrderHistory);

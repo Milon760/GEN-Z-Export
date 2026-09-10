@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { FiEye, FiShoppingCart } from "react-icons/fi";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { ProductContext } from "../../context/ProductContext"; // আপনার সঠিক Context Path দিন
+import { useProducts } from "../../context/ProductContext"; // আপনার সঠিক Context Path দিন
 
 const ProductCard = ({ product }) => {
   const {
@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
     favorites = [],
     addToFavorites,
     removeFromFavorites,
-  } = useContext(ProductContext);
+  } = useProducts();
 
   if (!product) return null;
 
