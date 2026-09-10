@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const serverPort = process.env.SERVER_PORT || 5001;
-const mongodbURL = process.env.MONGO_URL || "mongodb://localhost:27017/GEN-Z";
+const mongodbURL = process.env.MONGO_URL;
 const jwtSecretKey = process.env.JWT_SECRET_KEY || "mdjkdkiie8^77$gbcb";
 const jwtRefreshSecretKey = process.env.JWT_REFRESH_KEY || "mdjkdk7$gbcb87E8E";
 const smtpUserName = process.env.SMTP_USER_NAME || "";

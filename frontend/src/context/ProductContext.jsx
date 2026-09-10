@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import API from "../helper/API";
 import { toast } from "sonner";
 import { useContext } from "react";
+import axios from "axios";
 
 export const ProductContext = createContext();
 
@@ -35,7 +36,9 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await API.get("/products");
+      const res = await axios.get(
+        "https://gen-z-export-backend.onrender.com/api/products",
+      );
       console.log(res, "products");
 
       // ব্যাকএন্ড রেসপন্স চেক Safe Fallback সহ
@@ -51,6 +54,26 @@ export const ProductProvider = ({ children }) => {
       setIsLoading(false); // লোডিং সমাপ্ত
     }
   };
+  // // 🌐 ২. Backend থেকে All Products ডাটা লোড করা
+  // const fetchProducts = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const res = await API.get("/products");
+  //     console.log(res, "products");
+
+  //     // ব্যাকএন্ড রেসপন্স চেক Safe Fallback সহ
+  //     const productsData = res.data?.payload?.products;
+
+  //     setAllProduct(productsData);
+  //   } catch (error) {
+  //     console.error("Error fetching products:", error);
+  //     toast.error(
+  //       "প্রোডাক্ট লোড করতে সমস্যা হয়েছে! সার্ভার চালু আছে কিনা চেক করুন।",
+  //     );
+  //   } finally {
+  //     setIsLoading(false); // লোডিং সমাপ্ত
+  //   }
+  // };
 
   useEffect(() => {
     fetchProducts();
