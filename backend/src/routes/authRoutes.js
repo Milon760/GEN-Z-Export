@@ -13,7 +13,7 @@ const {
   verifyResetOtp,
   resetPassword,
   handleOAuthCallback,
-} = require("../controllers/userControllers");
+} = require("../controllers/authControllers");
 
 const { protect } = require("../middlewares/authMiddleware");
 

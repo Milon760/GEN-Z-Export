@@ -25,31 +25,32 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 //
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://gen-z-export.vercel.app/",
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "https://gen-z-export.vercel.app/",
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       // রিকোয়েস্টের অরিজিন যদি লিস্টে থাকে অথবা লোকাল/টুলস থেকে (no origin) হয়
+//       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("CORS Blocked by Admin"));
+//       }
+//     },
+//     credentials: true,
+//   }),
+// );
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // রিকোয়েস্টের অরিজিন যদি লিস্টে থাকে অথবা লোকাল/টুলস থেকে (no origin) হয়
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS Blocked by Admin"));
-      }
-    },
+    origin: "http://localhost:5173",
     credentials: true,
   }),
 );
 
-// app.use(
-//   cors({
-//     origin: clientURL,
-//     credentials: true,
-//   }),
-// );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

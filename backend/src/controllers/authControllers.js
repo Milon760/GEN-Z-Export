@@ -8,7 +8,8 @@ const {
   verifyJsonWebToken,
 } = require("../helper/jsonwebtoken");
 const { setAuthCookie, clearAuthCookie } = require("../helper/cookieHelper");
-const emailWithNodeMailer = require("../helper/email");
+const sendEmail = require("../helper/email");
+
 const {
   activateEmailTemplate,
   resetEmailTemplate,
@@ -52,8 +53,10 @@ const registerHandle = async (req, res, next) => {
 
     // send email with nodemailer
     try {
-      await emailWithNodeMailer(emailData);
+      await sendEmail(emailData);
     } catch (emailError) {
+      console.log(emailError);
+
       next(createError(500, "Failed to send verification email."));
       return;
     }
@@ -322,7 +325,7 @@ const forgotPassword = async (req, res, next) => {
     };
 
     try {
-      await emailWithNodeMailer(emailData);
+      await sendEmail(emailData);
     } catch (emailError) {
       next(createError(500, "Failed to send varification email."));
       return;

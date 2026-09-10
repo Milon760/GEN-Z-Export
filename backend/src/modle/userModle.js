@@ -1,6 +1,5 @@
 const bcryptjs = require("bcryptjs");
 const { Schema, model } = require("mongoose");
-const { defaultImagePath } = require("../secret");
 
 const userSchema = new Schema(
   {
@@ -24,30 +23,34 @@ const userSchema = new Schema(
         message: (props) => `${props.value} is not a valid email!`,
       },
     },
-    // OAuth ইউজারদের পাসওয়ার্ড থাকবে না, তাই required সরানো হয়েছে
     password: {
       type: String,
       trim: true,
       minlength: [6, "The length of password can be minimum 6 characters."],
-      select: false,
+      select: false, // ডাটা কোয়েরি করার সময় পাসওয়ার্ড হাইড থাকবে
     },
-    // OAuth দিয়ে লগইন করলে ফোন নম্বর নাও পেতে পারেন
     phone: {
-      type: String, // String রাখা ভালো (যেমন: "+88017...")
-      trim: true,
+      type: String,
+      unique: true,
+      sparse: true, // 💡 এটি খুবই গুরুত্বপূর্ণ! ওঅথ ইউজারদের ফোন নম্বর না থাকলে যাতে ডুপ্লিকেট এরর না আসে
+      validate: {
+        validator: function (v) {
+          // যদি নম্বর দেওয়া হয়, তবেই কেবল ১১ ডিজিটের বাংলাদেশী ফরম্যাট চেক করবে
+          if (!v) return true;
+          return /^01\d{9}$/.test(v);
+        },
+        message: (props) =>
+          `${props.value} Not a valid Bangladeshi phone number! Please provide an 11-digit number starting with 01.`,
+      },
     },
     address: {
       type: String,
       trim: true,
     },
-    image: {
-      type: String,
-      default: defaultImagePath,
+    avatar: {
+      url: { type: String, default: "" },
+      public_id: { type: String, default: "" },
     },
-
-    // ----------------------------------------------------
-    // 🔹 Google & Facebook OAuth এবং সিকিউরিটি ফিল্ডসমূহ
-    // ----------------------------------------------------
     googleId: {
       type: String,
       default: null,
@@ -56,16 +59,11 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
-    // কোন উপায়ে অ্যাকাউন্ট খোলা হয়েছে তা ট্র্যাকিংয়ের জন্য
     authProvider: {
       type: String,
       enum: ["local", "google", "facebook"],
       default: "local",
     },
-
-    // ----------------------------------------------------
-    // 🔹 Role & Status (টাইপ ঠিক করা হয়েছে)
-    // ----------------------------------------------------
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -77,28 +75,20 @@ const userSchema = new Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false, // Google/Facebook দিয়ে সাইন আপ করলে Passport Controller-এ true করে দেবেন
+      default: false,
     },
-
-    // ----------------------------------------------------
-    // 🔹 ই-কমার্স ট্র্যাকিং ও অ্যানালিটিক্স (Analytics & Stats)
-    // ----------------------------------------------------
     totalSpent: {
       type: Number,
-      default: 0, // ইউজার মোট কত টাকার কেনাকাটা করেছে
+      default: 0,
     },
     totalOrders: {
       type: Number,
-      default: 0, // মোট সফল অর্ডারের সংখ্যা
+      default: 0,
     },
     loyaltyPoints: {
       type: Number,
-      default: 0, // প্রফেশনাল রিওয়ার্ড/অফার পয়েন্ট
+      default: 0,
     },
-
-    // ----------------------------------------------------
-    // 🔹 নোটিফিকেশন ও ডিসকাউন্ট অফার ট্র্যাকিং
-    // ----------------------------------------------------
     notifications: [
       {
         title: String,
@@ -108,13 +98,9 @@ const userSchema = new Schema(
       },
     ],
     fcmToken: {
-      type: String, // Push Notification (Firebase) পাঠানোর জন্য
+      type: String,
       default: null,
     },
-
-    // ----------------------------------------------------
-    // 🔹 OTP & Reset password
-    // ----------------------------------------------------
     otp: {
       type: String,
       select: false,
@@ -131,17 +117,25 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-// 🔹 Password Hash করার Middleware (যদি পাসওয়ার্ড থাকে তবেই হ্যাশ করবে)
-userSchema.pre("save", async function () {
-  if (!this.isModified("password") || !this.password) return;
+// 💡 পাসওয়ার্ড হ্যাশ করার মডিফাইড মিডলওয়্যার
+userSchema.pre("save", async function (next) {
+  // যদি পাসওয়ার্ড মডিফাই না হয় অথবা পাসওয়ার্ড ফিল্ডে ডাটা না থাকে
+  if (!this.isModified("password") || !this.password) {
+    return next();
+  }
 
-  const salt = await bcryptjs.genSalt(10);
-  this.password = await bcryptjs.hash(this.password, salt);
+  try {
+    const salt = await bcryptjs.genSalt(10);
+    this.password = await bcryptjs.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 🔹 Password Compare Method
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  if (!this.password) return false; // Google/Facebook ইউজারদের কোনো পাসওয়ার্ড না থাকলে
+  if (!this.password) return false;
   return await bcryptjs.compare(enteredPassword, this.password);
 };
 
