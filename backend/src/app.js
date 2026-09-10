@@ -10,7 +10,7 @@ const authRouter = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const chatRoute = require("./routes/aiRoutes");
 const bannerRoute = require("./routes/bannerRoute");
-const adminRoutes = require("./routes/AdminRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const { errorResponse } = require("./controllers/responseController");
 
