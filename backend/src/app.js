@@ -13,6 +13,7 @@ const bannerRouter = require("./routes/bannerRoute");
 const adminRouter = require("./routes/adminRoutes");
 
 const { errorResponse } = require("./controllers/responseController");
+const { clientURL } = require("./secret");
 
 require("./config/passport"); // পাসপোর্ট কনফিগ ফাইলটি লোড করলাম
 
@@ -25,7 +26,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: clientURL,
     credentials: true,
   }),
 );
