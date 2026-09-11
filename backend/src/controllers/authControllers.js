@@ -44,6 +44,7 @@ const registerHandle = async (req, res, next) => {
 
     console.log("Generated token:", token);
     console.log("Generated OTP:", otp);
+    console.log("user email:", email);
 
     const emailData = {
       email,
@@ -79,6 +80,7 @@ const verifyOtp = async (req, res, next) => {
     const { userOtp } = req.body;
     // ১. হাইফেন বাদ দিয়ে কুকির নাম ঠিক করা হয়েছে
     const token = req.cookies.activation_token;
+    console.log("token", token);
 
     if (!userOtp) throw createError(401, "OTP not found");
     if (!token) throw createError(401, "Token not found");
@@ -375,6 +377,8 @@ const verifyResetOtp = async (req, res, next) => {
       payload: { resetToken },
     });
   } catch (error) {
+    console.log(error);
+
     next(error);
   }
 };
