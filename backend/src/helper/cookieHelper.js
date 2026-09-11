@@ -1,17 +1,21 @@
 const setAuthCookie = (res, tokenName, token, durationInMinutes = 5) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie(tokenName, token, {
-    httpOnly: true, // ক্লায়েন্ট সাইড স্ক্রিপ্ট (XSS attack) থেকে নিরাপদ রাখবে
-    secure: process.env.NODE_ENV === "production", // প্রোডাকশনে শুধুমাত্র HTTPS-এ কাজ করবে
-    sameSite: "lax", // CSRF অ্যাটাক থেকে সুরক্ষা দেবে
-    maxAge: durationInMinutes * 60 * 1000, // মিনিটকে মিলিসেকেন্ডে কনভার্ট করা হয়েছে
+    httpOnly: true, // XSS অ্যাটাক থেকে নিরাপদ রাখে
+    secure: isProduction, // Cross-Site কুকির জন্য HTTPS এ true হওয়া বাধ্যতামূলক
+    sameSite: isProduction ? "none" : "lax", // 💡 প্রোডাকশনে (Render-এ) অবশ্যই "none" হতে হবে
+    maxAge: durationInMinutes * 60 * 1000,
   });
 };
 
 const clearAuthCookie = (res, tokenName) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.clearCookie(tokenName, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax", // 💡 clearCookie করার সময় একই অপশন দিতে হয়
   });
 };
 
