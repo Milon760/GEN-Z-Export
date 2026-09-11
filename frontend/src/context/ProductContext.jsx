@@ -36,9 +36,7 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(
-        "https://gen-z-export-backend.onrender.com/api/products",
-      );
+      const res = await API.get("/products");
       console.log(res, "products");
 
       // ব্যাকএন্ড রেসপন্স চেক Safe Fallback সহ

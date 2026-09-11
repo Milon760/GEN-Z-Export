@@ -125,6 +125,8 @@ const verifyOtp = async (req, res, next) => {
       message: "Registration successful and user verified.",
     });
   } catch (error) {
+    console.log(error);
+
     next(error);
   }
 };

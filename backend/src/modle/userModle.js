@@ -117,20 +117,15 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
-// 💡 পাসওয়ার্ড হ্যাশ করার মডিফাইড মিডলওয়্যার
-userSchema.pre("save", async function (next) {
-  // যদি পাসওয়ার্ড মডিফাই না হয় অথবা পাসওয়ার্ড ফিল্ডে ডাটা না থাকে
+// 💡 পাসওয়ার্ড হ্যাশ করার সঠিক মিডলওয়্যার (Mongoose modern async/await)
+userSchema.pre("save", async function () {
+  // যদি পাসওয়ার্ড মডিফাই না হয় অথবা পাসওয়ার্ড ফিল্ডে ডাটা না থাকে
   if (!this.isModified("password") || !this.password) {
-    return next();
+    return; // next() লেখার দরকার নেই, শুধু return করে দিন
   }
 
-  try {
-    const salt = await bcryptjs.genSalt(10);
-    this.password = await bcryptjs.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
+  const salt = await bcryptjs.genSalt(10);
+  this.password = await bcryptjs.hash(this.password, salt);
 });
 
 // 🔹 Password Compare Method
